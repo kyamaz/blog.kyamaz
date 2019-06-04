@@ -89,8 +89,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>RISC-V</p>
+        <p>RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.<br>拡張ですから, “拡張命令”としてその拡張部分だけを議論します.<br>まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.<br>そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう. </p>
+<p>RISC-V の定義は Haskell で書かれています. これに習って定義します.  </p>
+<h3 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h3><pre><code>data QRegister
+  = Q0
+  | Q1
+--| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します
+  deriving (Show, Eq, Ord)</code></pre><p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
+<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
+<pre><code>data QRegisterInstr =
+  QInstr !QOpcode
+         !CSRegister   -- Control and Status Classical Register
+         !QRegister
+  deriving (Show, Eq, Ord)
 
+data QOpcode
+  = QLEAR   -- 量子ビットの初期化
+  | HADAM   -- アダマール(Hadamard)ゲート
+  | TGATE   -- π/8 ゲート（またの名は Tゲート）
+  | CNOT    -- 制御NOTゲート（２量子ビット演算）
+  deriving (Show, Eq, Ord)</code></pre><h2 id="測定を表す命令セット"><a href="#測定を表す命令セット" class="headerlink" title="測定を表す命令セット"></a>測定を表す命令セット</h2><p>測定は, 上記の <code>QRegisterInstr</code> と同じように扱うことはできません.<br>なぜなら, <code>QRegister</code> を測定すると, その値が確定してしまいます.<br>その確定した値を読み出して, 古典レジスタ <code>Register</code> へ情報を移す必要があるからです.<br>つまり, <code>QRegisterInstr</code> とは違う <code>QMeasurementInstr</code> 型を定義することを考えなければなりません.<br>さらに測定も制御レジスタを使う前提もあり, 引数に <code>CSRegister</code> も含めて次のような定義とします. </p>
+<pre><code>data QMeasurementInstr =
+  MEASURE !CSRegister   -- Control and Status Classical Register
+          !QRegister
+          !Register
+  deriving (Show, Eq, Ord)</code></pre>
       
     </div>
     <footer class="article-footer">
