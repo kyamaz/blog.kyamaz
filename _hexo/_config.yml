@@ -75,6 +75,9 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: landscape
 
+include_markdown:
+  dir: source/_template
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
