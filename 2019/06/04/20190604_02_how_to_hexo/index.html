@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="How do you like Quantum ?">
 <meta property="og:description" content="Github Pages アクセス制限やビルド制限など Usage limits に注意.  Jekyll がデフォルトなので, 最初の設定では Jekyll でサイトを構築する.root directory に _config.yml, _layouts/default.html (ブランチ作成時とは別の手順で作成), LICENSE, README.md, .gitignore (Jekyll">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-04T14:16:35.984Z">
+<meta property="og:updated_time" content="2019-06-04T14:18:54.065Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Github Pages + Hexo の設定">
 <meta name="twitter:description" content="Github Pages アクセス制限やビルド制限など Usage limits に注意.  Jekyll がデフォルトなので, 最初の設定では Jekyll でサイトを構築する.root directory に _config.yml, _layouts/default.html (ブランチ作成時とは別の手順で作成), LICENSE, README.md, .gitignore (Jekyll">
@@ -145,7 +145,7 @@
 
 <p>( YYYYMMDD_AA_any_strings.md として管理すると便利. ) </p>
 <h3 id="deploy-操作"><a href="#deploy-操作" class="headerlink" title="deploy 操作"></a>deploy 操作</h3><p><strong>master に直接 commit する. 更に, HEAD から master push される.</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout hexo</span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo deploy -g</span><br><span class="line"><span class="meta">$</span> git push origin hexo</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout hexo</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo deploy -g</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> git add source</span><br><span class="line"><span class="meta">$</span> git commit -m 'updated _posts'</span><br><span class="line"><span class="meta">$</span> git push origin hexo</span><br></pre></td></tr></table></figure>
 
 
       
