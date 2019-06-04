@@ -80,5 +80,5 @@ theme: landscape
 deploy:
   type: git
   repo: https://github.com/kyamaz/kyamaz.git
-  branch: draft
+  branch: master
   message: updated by hexo deployer
