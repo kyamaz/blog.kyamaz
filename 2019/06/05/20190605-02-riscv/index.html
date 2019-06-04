@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="How do you like Quantum ?">
 <meta property="og:description" content="RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.拡張ですから, “拡張命令”としてその拡張部分だけを議論します.まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう.  R">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-04T17:21:05.220Z">
+<meta property="og:updated_time" content="2019-06-04T17:24:16.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RISC-V量子拡張について">
 <meta name="twitter:description" content="RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.拡張ですから, “拡張命令”としてその拡張部分だけを議論します.まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう.  R">
@@ -98,7 +98,7 @@
   | Q1
 --| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します
   deriving (Show, Eq, Ord)</code></pre><p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
-<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
+<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $\pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
 <pre><code>data QRegisterInstr =
   QInstr !QOpcode
          !CSRegister   -- Control and Status Classical Register
