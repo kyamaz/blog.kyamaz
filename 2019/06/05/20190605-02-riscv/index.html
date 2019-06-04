@@ -7,18 +7,18 @@
   
   <title>RISC-V量子拡張について | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="RISC-V">
-<meta name="keywords" content="quantum computing, quantum information">
+  <meta name="description" content="RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.拡張ですから, “拡張命令”としてその拡張部分だけを議論します.まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう.  R">
+<meta name="keywords" content="riscv,quantum computing">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RISC-V量子拡張について">
 <meta property="og:url" content="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="RISC-V">
+<meta property="og:description" content="RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.拡張ですから, “拡張命令”としてその拡張部分だけを議論します.まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう.  R">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-04T16:48:49.431Z">
+<meta property="og:updated_time" content="2019-06-04T17:21:05.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RISC-V量子拡張について">
-<meta name="twitter:description" content="RISC-V">
+<meta name="twitter:description" content="RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.拡張ですから, “拡張命令”としてその拡張部分だけを議論します.まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう.  R">
   
     <link rel="alternate" href="/kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -91,14 +91,39 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>RISC-V</p>
+        <p>RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.<br>拡張ですから, “拡張命令”としてその拡張部分だけを議論します.<br>まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.<br>そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう. </p>
+<p>RISC-V の定義は Haskell で書かれています. これに習って定義します.  </p>
+<h3 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h3><pre><code>data QRegister
+  = Q0
+  | Q1
+--| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します
+  deriving (Show, Eq, Ord)</code></pre><p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
+<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
+<pre><code>data QRegisterInstr =
+  QInstr !QOpcode
+         !CSRegister   -- Control and Status Classical Register
+         !QRegister
+  deriving (Show, Eq, Ord)
 
+data QOpcode
+  = QLEAR   -- 量子ビットの初期化
+  | HADAM   -- アダマール(Hadamard)ゲート
+  | TGATE   -- π/8 ゲート（またの名は Tゲート）
+  | CNOT    -- 制御NOTゲート（２量子ビット演算）
+  deriving (Show, Eq, Ord)</code></pre><h2 id="測定を表す命令セット"><a href="#測定を表す命令セット" class="headerlink" title="測定を表す命令セット"></a>測定を表す命令セット</h2><p>測定は, 上記の <code>QRegisterInstr</code> と同じように扱うことはできません.<br>なぜなら, <code>QRegister</code> を測定すると, その値が確定してしまいます.<br>その確定した値を読み出して, 古典レジスタ <code>Register</code> へ情報を移す必要があるからです.<br>つまり, <code>QRegisterInstr</code> とは違う <code>QMeasurementInstr</code> 型を定義することを考えなければなりません.<br>さらに測定も制御レジスタを使う前提もあり, 引数に <code>CSRegister</code> も含めて次のような定義とします. </p>
+<pre><code>data QMeasurementInstr =
+  MEASURE !CSRegister   -- Control and Status Classical Register
+          !QRegister
+          !Register
+  deriving (Show, Eq, Ord)</code></pre>
       
     </div>
     <footer class="article-footer">
       <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv/" data-id="cjwi1j07c0004z9z350gq6md9" class="article-share-link">共有</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
+
     </footer>
   </div>
   
@@ -127,7 +152,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/misc/">misc</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
     </div>
   </div>
 
@@ -137,7 +162,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/kyamaz/tags/misc/" style="font-size: 10px;">misc</a>
+      <a href="/kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/kyamaz/tags/quantum-computing/" style="font-size: 10px;">quantum computing</a> <a href="/kyamaz/tags/riscv/" style="font-size: 10px;">riscv</a>
     </div>
   </div>
 
