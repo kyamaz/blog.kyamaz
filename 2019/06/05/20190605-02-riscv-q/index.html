@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>RISC-V 量子拡張 (1. 定義を考える) | How do you like Quantum ?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
+<meta name="keywords" content="quantum computing,riscv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V 量子拡張 (1. 定義を考える)">
+<meta property="og:url" content="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv-q/index.html">
+<meta property="og:site_name" content="How do you like Quantum ?">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
+<meta property="og:locale" content="ja">
+<meta property="og:updated_time" content="2019-06-05T07:37:35.807Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RISC-V 量子拡張 (1. 定義を考える)">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
+  
+    <link rel="alternate" href="/kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/kyamaz/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/kyamaz/" id="logo">How do you like Quantum ?</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/kyamaz/" id="subtitle">量子計算/量子情報の徒然なブログ</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/kyamaz/">Home</a>
+        
+          <a class="main-nav-link" href="/kyamaz/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/kyamaz/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://kyamaz.github.io/kyamaz"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-20190605-02-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/kyamaz/2019/06/05/20190605-02-riscv-q/" class="article-date">
+  <time datetime="2019-06-04T16:35:42.000Z" itemprop="datePublished">2019-06-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RISC-V 量子拡張 (1. 定義を考える)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>RISC-Vの定義に, 量子計算拡張を追加することを考えます.<br>拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.<br>まずは, この拡張の呼び方を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.<br>そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案します. </p>
+<p>RISC-V ISA <strong>U Extension</strong> (RISC-V 量子拡張) </p>
+<p>とします. </p>
+<p>RISC-V の定義は Haskell で書かれています. これに習って定義します.  </p>
+<h2 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data QRegister</span><br><span class="line">  = Q0</span><br><span class="line">  | Q1</span><br><span class="line">--| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
+
+<p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
+<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $\pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">data QRegisterInstr =</span><br><span class="line">  QInstr !QOpcode</span><br><span class="line">         !CSRegister   -- Control and Status Classical Register</span><br><span class="line">         !QRegister</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br><span class="line"></span><br><span class="line">data QOpcode</span><br><span class="line">  = QLEAR   -- 量子ビットの初期化</span><br><span class="line">  | HADAM   -- アダマール(Hadamard)ゲート</span><br><span class="line">  | TGATE   -- π/8 ゲート（またの名は Tゲート）</span><br><span class="line">  | CNOT    -- 制御NOTゲート（２量子ビット演算）</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
+
+<p>演算子の数を軽減するためには, 3つのユニタリ操作でよいとして必要最低限の種類を提供するだけよりは,<br>他のユニタリ操作も使えるように定義しておいた方がよいかもしれません.  </p>
+<p>候補としては 1〜3量子ビット演算までの量子ゲート操作がある方が良いかもしれません.<br>但し, これらを追加すると制御用のビット数も足らない可能性もあり, それに応じて <code>CSRegister</code> を引数に増やす必要があるかもしれません. </p>
+<h2 id="測定を表す命令セット"><a href="#測定を表す命令セット" class="headerlink" title="測定を表す命令セット"></a>測定を表す命令セット</h2><p>測定は, 上記の <code>QRegisterInstr</code> と同じように扱うことはできません.<br>なぜなら, <code>QRegister</code> を測定すると, その値が確定してしまいます.<br>その確定した値を読み出して, 古典レジスタ <code>Register</code> へ情報を移す必要があるからです.<br>つまり, <code>QRegisterInstr</code> とは違う <code>QMeasurementInstr</code> 型を定義することを考えなければなりません.<br>さらに測定も制御レジスタを使う前提もあり, 引数に <code>CSRegister</code> も含めて次のような定義とします. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data QMeasurementInstr =</span><br><span class="line">  MEASURE !CSRegister   -- Control and Status Classical Register</span><br><span class="line">          !QRegister</span><br><span class="line">          !Register</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
+
+<p>この定義も一概にこれで良いのかは悩ましいです.<br>下記のように <code>CSQRType</code> とタイプを表す識別子を追加した方がよいかもしれません.<br>この方が「測定」だけでない他の操作を扱えるため, 汎用性がありそうです.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data CSQRType  = MeasureOneQubit | MeasureAll</span><br><span class="line">data CSQRInstr =</span><br><span class="line">  CSQRInstr !CSQRType !CSRegister !QRegister !Register</span><br></pre></td></tr></table></figure>
+
+<p>この辺りもどのような定義がよいか, 今後の検討が必要になってきます.  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjwj3kbd40000z2z3nf463myt" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/kyamaz/2019/06/05/20190605-03-qlang/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          LLVM Frontend 量子拡張 (1. Qlang を考える)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/kyamaz/2019/06/05/20190605-01-slidehtml/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">スライドコンテンツの自動生成 (slidehtml)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/clang/">clang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/kyamaz/tags/clang/" style="font-size: 10px;">clang</a> <a href="/kyamaz/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/kyamaz/tags/quantum-computing/" style="font-size: 15px;">quantum computing</a> <a href="/kyamaz/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/kyamaz/archives/2019/06/">六月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/kyamaz/2019/06/05/20190605-03-qlang/">LLVM Frontend 量子拡張 (1. Qlang を考える)</a>
+          </li>
+        
+          <li>
+            <a href="/kyamaz/2019/06/05/20190605-02-riscv-q/">RISC-V 量子拡張 (1. 定義を考える)</a>
+          </li>
+        
+          <li>
+            <a href="/kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
+          </li>
+        
+          <li>
+            <a href="/kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
+          </li>
+        
+          <li>
+            <a href="/kyamaz/2019/06/04/20190604-01-first-entry/">はじめてみようかと...</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 kyamaz<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/kyamaz/" class="mobile-nav-link">Home</a>
+  
+    <a href="/kyamaz/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/kyamaz/fancybox/jquery.fancybox.css">
+  <script src="/kyamaz/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/kyamaz/js/script.js"></script>
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
