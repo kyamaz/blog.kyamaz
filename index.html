@@ -67,9 +67,52 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-20190605-02-riscv" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-20190605-03-qlang" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/kyamaz/2019/06/05/20190605-02-riscv/" class="article-date">
+    <a href="/kyamaz/2019/06/05/20190605-03-qlang/" class="article-date">
+  <time datetime="2019-06-05T14:19:40.000Z" itemprop="datePublished">2019-06-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/kyamaz/2019/06/05/20190605-03-qlang/">LLVM Frontend 量子拡張 (1. Qlang を考える)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
+<h2 id="LLVM-Frontend-の拡張"><a href="#LLVM-Frontend-の拡張" class="headerlink" title="LLVM Frontend の拡張"></a>LLVM Frontend の拡張</h2><p>LLVM Frontend である <code>clang</code> の量子拡張を考えます.<br>Frontend の名前は, 単純に <code>qlang</code> としておきます. </p>
+<p>例えば, 次のようなC言語拡張を行った場合の構文解析を行えるようにしたいと考えています. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">int x = 0;              // 古典変数</span><br><span class="line">int a, b, c, d;         // qint 型のような primitive な型を拡張する案もあるが, </span><br><span class="line">                        // #pragma で量子変数を指定するような方法でよいのではないか</span><br><span class="line"></span><br><span class="line">#pragma oql quantum private(a, b, c, d)</span><br><span class="line">&#123;                       // プラグマによって拡張</span><br><span class="line"></span><br><span class="line">  a = 10;         // initialize q-register</span><br><span class="line">  b = a;                // 量子テレポーテーションで変数代入の処理を実現, a は破壊的</span><br><span class="line">  c = b;                // b は破壊的</span><br><span class="line">  d = a;          // no-cloning theorem violation ... コンパイルエラー</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">// #pragma のブロックを抜けたときに, 暗黙の測定が行われ, 測定した値が c に得られる. </span><br><span class="line"></span><br><span class="line">x = c;                  // c は通常のint型として扱う.</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjwiwnh250003z6z39ygytwji" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/clang/">clang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/llvm/">llvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-20190605-02-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/kyamaz/2019/06/05/20190605-02-riscv-q/" class="article-date">
   <time datetime="2019-06-04T16:35:42.000Z" itemprop="datePublished">2019-06-05</time>
 </a>
     
@@ -81,7 +124,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/kyamaz/2019/06/05/20190605-02-riscv/">RISC-V量子拡張について</a>
+      <a class="article-title" href="/kyamaz/2019/06/05/20190605-02-riscv-q/">RISC-V 量子拡張 (1. 定義を考える)</a>
     </h1>
   
 
@@ -89,35 +132,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>RISC-Vの定義に, 量子計算拡張を追加することを考えましょう.<br>拡張ですから, “拡張命令”としてその拡張部分だけを議論します.<br>まずは, この拡張の記号を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.<br>そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案しましょう. </p>
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>RISC-Vの定義に, 量子計算拡張を追加することを考えます.<br>拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.<br>まずは, この拡張の呼び方を考えます. 量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません.<br>そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てて, 量子計算拡張は「U」として提案します. </p>
+<p>RISC-V ISA <strong>U Extension</strong> (RISC-V 量子拡張) </p>
+<p>とします. </p>
 <p>RISC-V の定義は Haskell で書かれています. これに習って定義します.  </p>
-<h3 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h3><pre><code>data QRegister
-  = Q0
-  | Q1
---| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します
-  deriving (Show, Eq, Ord)</code></pre><p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
-<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $\pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
-<pre><code>data QRegisterInstr =
-  QInstr !QOpcode
-         !CSRegister   -- Control and Status Classical Register
-         !QRegister
-  deriving (Show, Eq, Ord)
+<h2 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data QRegister</span><br><span class="line">  = Q0</span><br><span class="line">  | Q1</span><br><span class="line">--| Q2 | Q3 | Q4 | ... 必要とする数だけ QRegister を定義します</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
 
-data QOpcode
-  = QLEAR   -- 量子ビットの初期化
-  | HADAM   -- アダマール(Hadamard)ゲート
-  | TGATE   -- π/8 ゲート（またの名は Tゲート）
-  | CNOT    -- 制御NOTゲート（２量子ビット演算）
-  deriving (Show, Eq, Ord)</code></pre><h2 id="測定を表す命令セット"><a href="#測定を表す命令セット" class="headerlink" title="測定を表す命令セット"></a>測定を表す命令セット</h2><p>測定は, 上記の <code>QRegisterInstr</code> と同じように扱うことはできません.<br>なぜなら, <code>QRegister</code> を測定すると, その値が確定してしまいます.<br>その確定した値を読み出して, 古典レジスタ <code>Register</code> へ情報を移す必要があるからです.<br>つまり, <code>QRegisterInstr</code> とは違う <code>QMeasurementInstr</code> 型を定義することを考えなければなりません.<br>さらに測定も制御レジスタを使う前提もあり, 引数に <code>CSRegister</code> も含めて次のような定義とします. </p>
-<pre><code>data QMeasurementInstr =
-  MEASURE !CSRegister   -- Control and Status Classical Register
-          !QRegister
-          !Register
-  deriving (Show, Eq, Ord)</code></pre>
+<p>この量子レジスタが, どれくらいの個数必要なのかはわかりません.<br>ただし, 定義するだけであれば, ある程度の個数だけ定義することができます. </p>
+<h2 id="ユニタリ演算を表す命令セット"><a href="#ユニタリ演算を表す命令セット" class="headerlink" title="ユニタリ演算を表す命令セット"></a>ユニタリ演算を表す命令セット</h2><p>任意のユニタリ行列を近似的に表せる必要最低限の量子ゲートは, アダマールゲート, $\pi/8$ ゲート, 制御NOTゲートの3つでよいことが知られています.<br>そこで, これらの3つのユニタリ演算子と, 量子ビットを「初期化する」操作の <code>QLEAR</code> を定義します.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">data QRegisterInstr =</span><br><span class="line">  QInstr !QOpcode</span><br><span class="line">         !CSRegister   -- Control and Status Classical Register</span><br><span class="line">         !QRegister</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br><span class="line"></span><br><span class="line">data QOpcode</span><br><span class="line">  = QLEAR   -- 量子ビットの初期化</span><br><span class="line">  | HADAM   -- アダマール(Hadamard)ゲート</span><br><span class="line">  | TGATE   -- π/8 ゲート（またの名は Tゲート）</span><br><span class="line">  | CNOT    -- 制御NOTゲート（２量子ビット演算）</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
+
+<p>演算子の数を軽減するためには, 3つのユニタリ操作でよいとして必要最低限の種類を提供するだけよりは,<br>他のユニタリ操作も使えるように定義しておいた方がよいかもしれません.  </p>
+<p>候補としては 1〜3量子ビット演算までの量子ゲート操作がある方が良いかもしれません.<br>但し, これらを追加すると制御用のビット数も足らない可能性もあり, それに応じて <code>CSRegister</code> を引数に増やす必要があるかもしれません. </p>
+<h2 id="測定を表す命令セット"><a href="#測定を表す命令セット" class="headerlink" title="測定を表す命令セット"></a>測定を表す命令セット</h2><p>測定は, 上記の <code>QRegisterInstr</code> と同じように扱うことはできません.<br>なぜなら, <code>QRegister</code> を測定すると, その値が確定してしまいます.<br>その確定した値を読み出して, 古典レジスタ <code>Register</code> へ情報を移す必要があるからです.<br>つまり, <code>QRegisterInstr</code> とは違う <code>QMeasurementInstr</code> 型を定義することを考えなければなりません.<br>さらに測定も制御レジスタを使う前提もあり, 引数に <code>CSRegister</code> も含めて次のような定義とします. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data QMeasurementInstr =</span><br><span class="line">  MEASURE !CSRegister   -- Control and Status Classical Register</span><br><span class="line">          !QRegister</span><br><span class="line">          !Register</span><br><span class="line">  deriving (Show, Eq, Ord)</span><br></pre></td></tr></table></figure>
+
+<p>この定義も一概にこれで良いのかは悩ましいです.<br>下記のように <code>CSQRType</code> とタイプを表す識別子を追加した方がよいかもしれません.<br>この方が「測定」だけでない他の操作を扱えるため, 汎用性がありそうです.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data CSQRType  = MeasureOneQubit | MeasureAll</span><br><span class="line">data CSQRInstr =</span><br><span class="line">  CSQRInstr !CSQRType !CSRegister !QRegister !Register</span><br></pre></td></tr></table></figure>
+
+<p>この辺りもどのような定義がよいか, 今後の検討が必要になってきます.  </p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv/" data-id="cjwi1j07c0004z9z350gq6md9" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjwj3kbd40000z2z3nf463myt" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
@@ -143,7 +182,7 @@ data QOpcode
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/kyamaz/2019/06/05/20190605-01-slidehtml/">slidehtml - スライドコンテンツの自動生成</a>
+      <a class="article-title" href="/kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
     </h1>
   
 
@@ -155,19 +194,19 @@ data QOpcode
 <li>生成されるスライド</li>
 </ul>
 <p><a href="/kyamaz/2019/06/05/20190605-01-slidehtml/slide.html">Slide</a></p>
-<h3 id="Hexo-に-generator-を追加"><a href="#Hexo-に-generator-を追加" class="headerlink" title="Hexo に generator を追加"></a>Hexo に generator を追加</h3><ul>
+<h2 id="Hexo-に-generator-を追加"><a href="#Hexo-に-generator-を追加" class="headerlink" title="Hexo に generator を追加"></a>Hexo に generator を追加</h2><ul>
 <li>Install</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install hexo-generator-slidehtml --save</span><br></pre></td></tr></table></figure>
 
-<p>–</p>
-<h3 id="hexo-generator-slidehtml-の設定"><a href="#hexo-generator-slidehtml-の設定" class="headerlink" title="hexo-generator-slidehtml の設定"></a>hexo-generator-slidehtml の設定</h3><ul>
+<hr>
+<h2 id="hexo-generator-slidehtml-の設定"><a href="#hexo-generator-slidehtml-の設定" class="headerlink" title="hexo-generator-slidehtml の設定"></a>hexo-generator-slidehtml の設定</h2><ul>
 <li>_config.yml の編集</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slidehtml:</span><br><span class="line">  titleMerge: true</span><br><span class="line">  horizontalSeparator: &apos;^\\n---\\n&apos;</span><br><span class="line">  verticalSeparator: &apos;^\\n--\\n&apos;</span><br></pre></td></tr></table></figure>
 
-<p>–</p>
-<h3 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h3><ul>
+<hr>
+<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><ul>
 <li>記事のヘッダ</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: hoge</span><br><span class="line">slidehtml: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
@@ -177,7 +216,7 @@ data QOpcode
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjwi1j0750001z9z36mkyfxob" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjwiwnh210001z6z3ez7ne8bb" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/misc/">misc</a></li></ul>
@@ -211,11 +250,11 @@ data QOpcode
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h3><ul>
+        <h2 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h2><ul>
 <li>アクセス制限やビルド制限など <a href="https://help.github.com/en/articles/what-is-github-pages#usage-limits" target="_blank" rel="noopener">Usage limits</a> に注意. </li>
 <li>Jekyll がデフォルトなので, 最初の設定では Jekyll でサイトを構築する.<br>root directory に _config.yml, _layouts/default.html (ブランチ作成時とは別の手順で作成), LICENSE, README.md, .gitignore (Jekyll) は残しておく.  </li>
 </ul>
-<h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><ul>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
 <li>master repo の下に _hexo フォルダを作成してインストールする. </li>
 <li>MathJax は, <code>npm install hexo-renderer-mathjax --save</code> でインストールする.  </li>
 </ul>
@@ -271,7 +310,7 @@ data QOpcode
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjwi1j07a0003z9z3juj1cf0w" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjwiwnh260004z6z3lr8ms0gy" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/misc/">misc</a></li></ul>
@@ -311,7 +350,7 @@ data QOpcode
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjwi1j0710000z9z3fgsfc8nv" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjwiwnh1v0000z6z3v598dwod" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/kyamaz/tags/misc/">misc</a></li></ul>
@@ -336,7 +375,7 @@ data QOpcode
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/clang/">clang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/kyamaz/tags/riscv/">riscv</a></li></ul>
     </div>
   </div>
 
@@ -346,7 +385,7 @@ data QOpcode
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/kyamaz/tags/quantum-computing/" style="font-size: 10px;">quantum computing</a> <a href="/kyamaz/tags/riscv/" style="font-size: 10px;">riscv</a>
+      <a href="/kyamaz/tags/clang/" style="font-size: 10px;">clang</a> <a href="/kyamaz/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/kyamaz/tags/quantum-computing/" style="font-size: 15px;">quantum computing</a> <a href="/kyamaz/tags/riscv/" style="font-size: 10px;">riscv</a>
     </div>
   </div>
 
@@ -368,11 +407,15 @@ data QOpcode
       <ul>
         
           <li>
-            <a href="/kyamaz/2019/06/05/20190605-02-riscv/">RISC-V量子拡張について</a>
+            <a href="/kyamaz/2019/06/05/20190605-03-qlang/">LLVM Frontend 量子拡張 (1. Qlang を考える)</a>
           </li>
         
           <li>
-            <a href="/kyamaz/2019/06/05/20190605-01-slidehtml/">slidehtml - スライドコンテンツの自動生成</a>
+            <a href="/kyamaz/2019/06/05/20190605-02-riscv-q/">RISC-V 量子拡張 (1. 定義を考える)</a>
+          </li>
+        
+          <li>
+            <a href="/kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
           </li>
         
           <li>
