@@ -13,8 +13,8 @@ timezone: Japan
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://kyamaz.github.io/kyamaz
-root: /kyamaz/
+url: http://kyamaz.github.io/blog.kyamaz
+root: /blog.kyamaz/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -82,6 +82,6 @@ include_markdown:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/kyamaz/kyamaz.git
+  repo: https://github.com/kyamaz/blog.kyamaz.git
   branch: master
   message: updated by hexo deployer
