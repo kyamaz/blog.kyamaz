@@ -8,14 +8,14 @@
   <title>RISC-V 量子拡張 (1. 定義を考える) | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
-<meta name="keywords" content="riscv,quantum computing">
+<meta name="keywords" content="riscv-q,quantum computing">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RISC-V 量子拡張 (1. 定義を考える)">
 <meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
 <meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-09T02:33:34.218Z">
+<meta property="og:updated_time" content="2019-06-12T16:25:33.349Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RISC-V 量子拡張 (1. 定義を考える)">
 <meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの定義に, 量子計算拡張を追加することを考えます.拡張ですから, 考えるのは“拡張命令”としてその拡張部分だけです.まずは, この拡張の呼び方を考え">
@@ -115,10 +115,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjwobws760006d8z3d28xr50c" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjwtg4quk0004d5z3bh96ugnh" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv/">riscv</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
 
     </footer>
   </div>
@@ -157,7 +157,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/clang/">clang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/llvm/">llvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/riscv/">riscv</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
     </div>
   </div>
 
@@ -167,7 +167,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/blog.kyamaz/tags/clang/" style="font-size: 10px;">clang</a> <a href="/blog.kyamaz/tags/llvm/" style="font-size: 10px;">llvm</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 15px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv/" style="font-size: 10px;">riscv</a>
+      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 15px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 10px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 10px;">riscv-q</a>
     </div>
   </div>
 
@@ -189,6 +189,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/06/05/20190605-03-qlang/">LLVM Frontend 量子拡張 (1. Qlang を考える)</a>
           </li>
         
@@ -202,10 +206,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/">はじめてみようかと...</a>
           </li>
         
       </ul>
