@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="How do you like Quantum ?">
 <meta property="og:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-12T16:25:43.214Z">
+<meta property="og:updated_time" content="2019-06-13T01:59:57.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LLVM IR 量子拡張 (1. QIR を考える)">
 <meta name="twitter:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
@@ -92,8 +92,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
-<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a>“ による提案や<br>QuTech(<a href="https://qutech.nl/)の[QuEST](https://quest.qtechtheory.org/)[*](https://github.com/QuEST-Kit/QuEST)" target="_blank" rel="noopener">https://qutech.nl/)の[QuEST](https://quest.qtechtheory.org/)[*](https://github.com/QuEST-Kit/QuEST)</a>, 
-EPiQC(<a href="https://www.epiqc.cs.uchicago.edu/about)によるLLVM" target="_blank" rel="noopener">https://www.epiqc.cs.uchicago.edu/about)によるLLVM</a> ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
+<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
 <h2 id="LLVM-IR-の拡張"><a href="#LLVM-IR-の拡張" class="headerlink" title="LLVM IR の拡張"></a>LLVM IR の拡張</h2><p>ここでは, LLVM Frontend, Backend で量子拡張することを考えています.<br>このためには, IR を拡張することを考える必要がありそうです.  </p>
 <p>arXiv:1604.01401 では, QIR を構成するべきという提案はありますが, 具体的な提案はされていません.<br>ScaffCC は, 今後実装を調べていきますが, 現状確認したところでは, IR を拡張する方針ではなく, Pass を拡張して対応しているようです.<br>具体的な QIR の仕様で, 公けになっている提案はみつけられていません. </p>
 <p>IR の Instraction は, <code>llvm/include/llvm/IR/Instruction.def</code> に定義されています.<br>ここに, “1-qubit operator”, “2-qubit operator”, “measurement operator” の３つを追加すれば良いと考えられます.  </p>
