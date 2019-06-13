@@ -5,20 +5,20 @@
   
 
   
-  <title>スライドコンテンツの自動生成 (slidehtml) | How do you like Quantum ?</title>
+  <title>LLVM IR 量子拡張 (1. QIR を考える) | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="生成されるスライド  Slide Hexo に generator を追加 Install  1$ npm install hexo-generator-slidehtml --save   hexo-generator-slidehtml の設定 _config.yml の編集  1234slidehtml:  titleMerge: true  horizontalSeparator: &amp;a">
-<meta name="keywords" content="misc">
+  <meta name="description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
+<meta name="keywords" content="quantum computing,llvm-q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="スライドコンテンツの自動生成 (slidehtml)">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/index.html">
+<meta property="og:title" content="LLVM IR 量子拡張 (1. QIR を考える)">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="生成されるスライド  Slide Hexo に generator を追加 Install  1$ npm install hexo-generator-slidehtml --save   hexo-generator-slidehtml の設定 _config.yml の編集  1234slidehtml:  titleMerge: true  horizontalSeparator: &amp;a">
+<meta property="og:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-09T03:52:45.692Z">
+<meta property="og:updated_time" content="2019-06-13T01:59:57.758Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="スライドコンテンツの自動生成 (slidehtml)">
-<meta name="twitter:description" content="生成されるスライド  Slide Hexo に generator を追加 Install  1$ npm install hexo-generator-slidehtml --save   hexo-generator-slidehtml の設定 _config.yml の編集  1234slidehtml:  titleMerge: true  horizontalSeparator: &amp;a">
+<meta name="twitter:title" content="LLVM IR 量子拡張 (1. QIR を考える)">
+<meta name="twitter:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190605-01-slidehtml" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190612-01-qir" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" class="article-date">
-  <time datetime="2019-06-04T15:07:49.000Z" itemprop="datePublished">2019-06-05</time>
+    <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" class="article-date">
+  <time datetime="2019-06-12T14:43:21.000Z" itemprop="datePublished">2019-06-12</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      スライドコンテンツの自動生成 (slidehtml)
+      LLVM IR 量子拡張 (1. QIR を考える)
     </h1>
   
 
@@ -91,36 +91,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ul>
-<li>生成されるスライド</li>
+        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
+<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
+<h2 id="LLVM-IR-の拡張"><a href="#LLVM-IR-の拡張" class="headerlink" title="LLVM IR の拡張"></a>LLVM IR の拡張</h2><p>ここでは, LLVM Frontend, Backend で量子拡張することを考えています.<br>このためには, IR を拡張することを考える必要がありそうです.  </p>
+<p>arXiv:1604.01401 では, QIR を構成するべきという提案はありますが, 具体的な提案はされていません.<br>ScaffCC は, 今後実装を調べていきますが, 現状確認したところでは, IR を拡張する方針ではなく, Pass を拡張して対応しているようです.<br>具体的な QIR の仕様で, 公けになっている提案はみつけられていません. </p>
+<p>IR の Instraction は, <code>llvm/include/llvm/IR/Instruction.def</code> に定義されています.<br>ここに, “1-qubit operator”, “2-qubit operator”, “measurement operator” の３つを追加すれば良いと考えられます.  </p>
+<p>具体的には, 未だどのような操作 (量子ゲート) を追加していけばよいかがはっきりしませんが, 一先ず</p>
+<ul>
+<li>1-qubit operator は, 任意角回転のユニタリ</li>
+<li>2-qubit operator は,  CNOT</li>
+<li>measurement operator は, Z軸基底の測定</li>
 </ul>
-<p><a href="/kyamaz/2019/06/05/20190605-01-slidehtml/slide.html">Slide</a></p>
-<h2 id="Hexo-に-generator-を追加"><a href="#Hexo-に-generator-を追加" class="headerlink" title="Hexo に generator を追加"></a>Hexo に generator を追加</h2><ul>
-<li>Install</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install hexo-generator-slidehtml --save</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="hexo-generator-slidehtml-の設定"><a href="#hexo-generator-slidehtml-の設定" class="headerlink" title="hexo-generator-slidehtml の設定"></a>hexo-generator-slidehtml の設定</h2><ul>
-<li>_config.yml の編集</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slidehtml:</span><br><span class="line">  titleMerge: true</span><br><span class="line">  horizontalSeparator: &apos;^\\n---\\n&apos;</span><br><span class="line">  verticalSeparator: &apos;^\\n--\\n&apos;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><ul>
-<li>記事のヘッダ</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: hoge</span><br><span class="line">slidehtml: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p><code>https://[yousite]/path/to/your/article/slide.html</code>が生成される. </p>
+<p>として検討を進めていくことにます. </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjwtg4quv0009d5z37bh4pwz8" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjwtg4qum0005d5z3pzvru6dl" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
 
     </footer>
   </div>
@@ -128,19 +118,10 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          RISC-V 量子拡張 (1. 定義を考える)
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/blog.kyamaz/2019/06/05/20190605-03-qlang/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">Github Pages + Hexo の設定</div>
+      <div class="article-nav-title">LLVM Frontend 量子拡張 (1. Qlang を考える)</div>
     </a>
   
 </nav>
