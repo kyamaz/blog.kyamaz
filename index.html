@@ -67,6 +67,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190619-01-qemu" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/" class="article-date">
+  <time datetime="2019-06-19T13:00:00.000Z" itemprop="datePublished">2019-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>RISC-V量子拡張を定義して, その QPU をエミュレートするには, QEMU で「RISC-V ISA <strong>U Extension</strong> (RISC-V 量子拡張) 」を動作させることを考えます.<br>まず, QEMU をコンパイルする環境を構築します.  </p>
+<p>以下により ${RISCV}/bin に qemu-system-riscv32 がインストールされる開発環境が準備できます. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/qemu/qemu.git</span><br><span class="line">$ cd qemu</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --target-list=riscv32-softmmu --prefix=$&#123;RISCV&#125;</span><br></pre></td></tr></table></figure>
+
+<p>この開発環境で, RISC-V U Extension を追加していきます.<br>RISC-V の仮想CPUのコードは, <code>target/riscv</code> にあります. </p>
+<p>まず手始めに, <code>cpu.h</code> に Extension の定義を追加しましょう. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define RVI RV(&apos;I&apos;)</span><br><span class="line">#define RVE RV(&apos;E&apos;) /* E and I are mutually exclusive */</span><br><span class="line">:</span><br><span class="line">#define RVU RV(&apos;U&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>とある <code>RVI</code>, <code>RVE</code>, … です. 量子拡張は<code>U</code> としましたが, <code>RVU</code> が定義されています. ということは, U Extension は予約されているようです.<br>これは事前の調査不足だったでしょうか. しかし, <a href="https://en.wikichip.org/wiki/risc-v/standard_extensions" target="_blank" rel="noopener">https://en.wikichip.org/wiki/risc-v/standard_extensions</a> などで調べても, <code>U</code> は使われていないようです.<br>QEMU のコード上では, <code>target/riscv/cpu.c</code>,<code>target/riscv/csr.c</code> に許容される Extension として登場しているだけのようです.<br>影響が読みきれないですが, 今後の課題として調査が必要そうです. </p>
+<p>まずは, <code>target/riscv</code> に量子拡張を追加して QEMU 上で, ベアメタルプログラミングを行う環境を作っていく方針で進めていきます.  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjx39no7100007oz3ccgpors2" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190612-01-qir" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" class="article-date">
@@ -426,7 +475,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグ</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
     </div>
   </div>
 
@@ -436,7 +485,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 15px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 10px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 10px;">riscv-q</a>
+      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 15px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 20px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 10px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 15px;">riscv-q</a>
     </div>
   </div>
 
@@ -458,6 +507,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
           </li>
         
@@ -471,10 +524,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
           </li>
         
       </ul>
