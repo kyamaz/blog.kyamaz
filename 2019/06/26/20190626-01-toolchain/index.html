@@ -5,16 +5,20 @@
   
 
   
-  <title>タグ: misc | How do you like Quantum ?</title>
+  <title>RISC-V toolchain（開発環境を整える） | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="quantum computing, quantum information">
-<meta property="og:type" content="website">
-<meta property="og:title" content="How do you like Quantum ?">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/tags/misc/index.html">
+  <meta name="description" content="RISC-V量子拡張のバイトコードを LLVM バックエンドから出力できることを目指していますが, LLVM 単体のコンパイルには非常にリッチな計算リソースが必要になります.  量子拡張のバイトコードを検討するにはとても試行錯誤することが予想されます. そこで, LLVM を改造していくことは少し先送りして, riscv-gnu-toolchain を使って色々と試せるようにします.RISC-Vの">
+<meta name="keywords" content="riscv-q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V toolchain（開発環境を整える）">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
+<meta property="og:description" content="RISC-V量子拡張のバイトコードを LLVM バックエンドから出力できることを目指していますが, LLVM 単体のコンパイルには非常にリッチな計算リソースが必要になります.  量子拡張のバイトコードを検討するにはとても試行錯誤することが予想されます. そこで, LLVM を改造していくことは少し先送りして, riscv-gnu-toolchain を使って色々と試せるようにします.RISC-Vの">
 <meta property="og:locale" content="ja">
+<meta property="og:updated_time" content="2019-06-26T13:00:18.809Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How do you like Quantum ?">
+<meta name="twitter:title" content="RISC-V toolchain（開発環境を整える）">
+<meta name="twitter:description" content="RISC-V量子拡張のバイトコードを LLVM バックエンドから出力できることを目指していますが, LLVM 単体のコンパイルには非常にリッチな計算リソースが必要になります.  量子拡張のバイトコードを検討するにはとても試行錯誤することが予想されます. そこで, LLVM を改造していくことは少し先送りして, riscv-gnu-toolchain を使って色々と試せるようにします.RISC-Vの">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -65,78 +69,58 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog.kyamaz/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" class="archive-article-date">
-  <time datetime="2019-06-04T15:07:49.000Z" itemprop="datePublished">6月 5</time>
+        <section id="main"><article id="post-20190626-01-toolchain" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/" class="article-date">
+  <time datetime="2019-06-26T13:00:00.000Z" itemprop="datePublished">2019-06-26</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
+    <h1 class="article-title" itemprop="name">
+      RISC-V toolchain（開発環境を整える）
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" class="archive-article-date">
-  <time datetime="2019-06-04T13:00:00.000Z" itemprop="datePublished">6月 4</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
-    </h1>
-  
+        <p>RISC-V量子拡張のバイトコードを LLVM バックエンドから出力できることを目指していますが, LLVM 単体のコンパイルには非常にリッチな計算リソースが必要になります. </p>
+<p>量子拡張のバイトコードを検討するにはとても試行錯誤することが予想されます. そこで, LLVM を改造していくことは少し先送りして, riscv-gnu-toolchain を使って色々と試せるようにします.<br>RISC-Vの32ビット対応を拡張することを考えていますので, 次のように arch や abi を限定してビルド環境を整えます.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/riscv/riscv-gnu-toolchain.git</span><br><span class="line">$ cd riscv-gnu-toolchain</span><br><span class="line">$ mkdir build</span><br><span class="line">$ ../configure --prefix=/opt/riscv --with-arch=rv32gc --with-abi=ilp32d</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/" class="archive-article-date">
-  <time datetime="2019-06-04T10:00:00.000Z" itemprop="datePublished">6月 4</time>
-</a>
+<p>LLVM Frontend は, OpenMP をお手本に #pragma による拡張を目指すため, toolchain ではうまく行かない想定ですが, バイトコードの検討はこの環境で試行錯誤していきます.  </p>
+
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/">はじめてみようかと...</a>
-    </h1>
-  
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjxd8ys21000updz377gtep64" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
 
-    </header>
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
