@@ -5,20 +5,20 @@
   
 
   
-  <title>QEMU の RISC-V（1. RISC-V量子拡張の対応方針） | How do you like Quantum ?</title>
+  <title>RISC-V 量子拡張 (2. カスタム拡張を考える) | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V量子拡張を定義して, その QPU をエミュレートするには, QEMU で「RISC-V ISA U Extension (RISC-V 量子拡張)">
-<meta name="keywords" content="riscv-q,qemu">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの 量子計算拡張を考えています.RISC-Vには custom0 〜 custom3 までの 4つの拡張命令が予め定義されています.opcode で">
+<meta name="keywords" content="riscv-q,quantum computing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="QEMU の RISC-V（1. RISC-V量子拡張の対応方針）">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/index.html">
+<meta property="og:title" content="RISC-V 量子拡張 (2. カスタム拡張を考える)">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V量子拡張を定義して, その QPU をエミュレートするには, QEMU で「RISC-V ISA U Extension (RISC-V 量子拡張)">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの 量子計算拡張を考えています.RISC-Vには custom0 〜 custom3 までの 4つの拡張命令が予め定義されています.opcode で">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-06-26T13:04:11.716Z">
+<meta property="og:updated_time" content="2019-07-03T17:47:30.518Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="QEMU の RISC-V（1. RISC-V量子拡張の対応方針）">
-<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V量子拡張を定義して, その QPU をエミュレートするには, QEMU で「RISC-V ISA U Extension (RISC-V 量子拡張)">
+<meta name="twitter:title" content="RISC-V 量子拡張 (2. カスタム拡張を考える)">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-Vの 量子計算拡張を考えています.RISC-Vには custom0 〜 custom3 までの 4つの拡張命令が予め定義されています.opcode で">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190619-01-qemu" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190703-01-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/" class="article-date">
-  <time datetime="2019-06-19T13:00:00.000Z" itemprop="datePublished">2019-06-19</time>
+    <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" class="article-date">
+  <time datetime="2019-07-03T16:48:08.000Z" itemprop="datePublished">2019-07-04</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      QEMU の RISC-V（1. RISC-V量子拡張の対応方針）
+      RISC-V 量子拡張 (2. カスタム拡張を考える)
     </h1>
   
 
@@ -92,24 +92,20 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
-<p>RISC-V量子拡張を定義して, その QPU をエミュレートするには, QEMU で「RISC-V ISA <strong>U Extension</strong> (RISC-V 量子拡張) 」を動作させることを考えます.<br>まず, QEMU をコンパイルする環境を構築します.  </p>
-<p>以下により ${RISCV}/bin に qemu-system-riscv32 がインストールされる開発環境が準備できます. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/qemu/qemu.git</span><br><span class="line">$ cd qemu</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --target-list=riscv32-softmmu --prefix=$&#123;RISCV&#125;</span><br></pre></td></tr></table></figure>
-
-<p>この開発環境で, RISC-V U Extension を追加していきます.<br>RISC-V の仮想CPUのコードは, <code>target/riscv</code> にあります. </p>
-<p>まず手始めに, <code>cpu.h</code> に Extension の定義を追加しましょう. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define RVI RV(&apos;I&apos;)</span><br><span class="line">#define RVE RV(&apos;E&apos;) /* E and I are mutually exclusive */</span><br><span class="line">:</span><br><span class="line">#define RVU RV(&apos;U&apos;)</span><br></pre></td></tr></table></figure>
-
-<p>とある <code>RVI</code>, <code>RVE</code>, … です. 量子拡張は<code>U</code> としましたが, <code>RVU</code> が定義されています. ということは, U Extension は予約されているようです.<br>これは事前の調査不足だったでしょうか. しかし, <a href="https://en.wikichip.org/wiki/risc-v/standard_extensions" target="_blank" rel="noopener">https://en.wikichip.org/wiki/risc-v/standard_extensions</a> などで調べても, <code>U</code> は使われていないようです.<br>QEMU のコード上では, <code>target/riscv/cpu.c</code>,<code>target/riscv/csr.c</code> に許容される Extension として登場しているだけのようです.<br>影響が読みきれないですが, 今後の課題として調査が必要そうです. </p>
-<p>まずは, <code>target/riscv</code> に量子拡張を追加して QEMU 上で, ベアメタルプログラミングを行う環境を作っていく方針で進めていきます.  </p>
+<p>RISC-Vの 量子計算拡張を考えています.<br>RISC-Vには custom0 〜 custom3 までの 4つの拡張命令が予め定義されています.<br>opcode では, custom0 = 0xb, custom1 = 0x2b, custom2 = 0x5b, custom3 = 0x7b が割り当てられています.<br>量子拡張では, 「１量子ビットのユニタリ演算」「２量子ビットのユニタリ演算」「量子ビットの射影測定」「量子ビットの初期化」「レジスタ間の移動」を追加することを考慮したいです.  </p>
+<p>拡張命令の検討の前に, レジスタについて考える必要があります. 通常のRV32Iの仕様では 32bit レジスタの個数は32個の x0 から x31 と定義してあり,<br>それぞれの番号のなかには特殊な役割をもっているレジスタもあります. 例えば, x0 は zero を表すレジスタと決まっている等.<br>そこで, 同じく量子レジスタも q0 から q32 の32個ある仕様として進めます. また, q0 は qzero を表すレジスタとし, ほかにも今後必要に応じて, 量子レジスタの役割も決めていきます.<br>当面, 量子レジスタは, 命令が呼ばれる前後で量子状態が保持される “保存レジスタ” としておきます. </p>
+<p>さてここで, 拡張命令セットに戻ると, 「量子ビットの初期化」「レジスタ間の移動」は古典命令セットを流用できそうです. （別で検討します. ）<br>つまり, 「１量子ビットのユニタリ演算」「２量子ビットのユニタリ演算」「量子ビットの射影測定」を拡張命令セットの opcode に割り当てることを想定します.  </p>
+<p>custom1 := 1量子ビット・ユニタリ演算<br>custom2 := 2量子ビット・ユニタリ演算<br>custom3 := 量子ビットの射影測定</p>
+<p>とおきます. （custom0 は今後の検討で必要になるかもしれません. 今は定義することを考えないで空けておきます. ）<br>この custom1/2/3 の opecode の定義は, toolchain の <code>riscv-binutils/include/opcode/riscv-opc.h</code> にあります.<br>なお, 同一の情報が <code>riscv-gdb/include/opcode/riscv-opc.h</code>, <code>riscv-qemu/include/disas/riscv-opc.h</code> にもあります. 修正するときには留意しましょう.<br>この riscv-opc.h には, custom1/2/3 の引数のタイプに応じて, custom<code>X</code>_rs1, custom<code>X</code>_rs1_rs2, custom<code>X</code>_rd, custom<code>X</code>_rd_rs1, custom<code>X</code>_rd_rs1_rs2 が利用可能となっています.  </p>
+<p>詳細の検討は更に重ねる必要がありますが, 1量子ビット・ユニタリ演算は custom1_rs1, 2量子ビット・ユニタリ演算は custom2_rs1_rs2, 量子ビット射影測定は custom3_rs1_rs2 (rs2は古典レジスタ）で表せると仮定します. </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjxnjayw7000tvzz34054hqlg" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjxnjayvj0009vzz3sx1mus3w" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
 
     </footer>
   </div>
@@ -117,19 +113,10 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          RISC-V toolchain（開発環境を整える）
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">LLVM IR 量子拡張 (1. QIR を考える)</div>
+      <div class="article-nav-title">RISC-V toolchain（開発環境を整える）</div>
     </a>
   
 </nav>
