@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>RISC-V の開発環境 | How do you like Quantum ?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V の開発環境を整えています. Visual Studio Code で開発環境を整えます.    VSCode を起動  “PlatformIO I">
+<meta name="keywords" content="riscv-q,vscode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V の開発環境">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/index.html">
+<meta property="og:site_name" content="How do you like Quantum ?">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V の開発環境を整えています. Visual Studio Code で開発環境を整えます.    VSCode を起動  “PlatformIO I">
+<meta property="og:locale" content="ja">
+<meta property="og:updated_time" content="2019-07-10T13:26:04.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RISC-V の開発環境">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V の開発環境を整えています. Visual Studio Code で開発環境を整えます.    VSCode を起動  “PlatformIO I">
+  
+    <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog.kyamaz/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog.kyamaz/" id="logo">How do you like Quantum ?</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog.kyamaz/" id="subtitle">量子計算/量子情報の徒然なブログ</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog.kyamaz/">Home</a>
+        
+          <a class="main-nav-link" href="/blog.kyamaz/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/blog.kyamaz/atom.xml" title="RSSフィード"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="検索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://kyamaz.github.io/blog.kyamaz"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-20190710-01-vscode" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/07/10/20190710-01-vscode/" class="article-date">
+  <time datetime="2019-07-10T14:28:31.000Z" itemprop="datePublished">2019-07-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RISC-V の開発環境
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>RISC-V の開発環境を整えています. Visual Studio Code で開発環境を整えます.  </p>
+<ul>
+<li><p>VSCode を起動</p>
+</li>
+<li><p>“PlatformIO IDE” の Extension をインストール（Extensionsタブをクリックして, 検索欄から “PlatformIO” を検索）<br>※インストール時の出力 Window を閉じてしまわないように注意. </p>
+</li>
+<li><p>コマンドパレット(Ctrl + Shift + P or 左下の設定アイコン =&gt; Command Palette)を開き, “PlatformIO”と検索 </p>
+</li>
+<li><p>“PlatformIO : Home”を選択し, 起動</p>
+</li>
+<li><p>New Projectを選択し, Name, Board, Framework を入力</p>
+<ul>
+<li>Name : プロジェクトの名前 （”risc-q”と入力）</li>
+<li>Board : ボードの種類. （”HiFive1(SiFive)”を選択）</li>
+<li>Framework : Boardに合わせた選択肢. （”Freedom E SDK”を選択）</li>
+</ul>
+</li>
+</ul>
+<p>しばらく待つと利用可能になります. </p>
+<p>簡単なテストコードとして, 次の src/test.c を作成します. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char **argv) &#123;</span><br><span class="line">    printf(&quot;Hello RISCV\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>コマンドパレット（ビルドは “PlatformIO : Build”）, または下部の青いバーにあるアイコンで, ビルドを行います.<br><code>.pioenvs/hifive1/firmware.elf</code> に ELF 形式のファイルが作られます. コマンドプロンプトから, 次のようなコマンドで<br>firmware.elf を読み込むと実行できるはずでした.  （がうまくいきません. 動かない理由を調査して次回以降に報告します. ）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-riscv32 -nographic -machine sifive_e -kernel firmware.elf</span><br></pre></td></tr></table></figure>
+
+<p>（出力される画面）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">qemu: hardware error: sifive_prci_read: read: addr=0xc</span><br><span class="line"></span><br><span class="line">CPU #0:</span><br><span class="line"> pc       20401d82</span><br><span class="line"> mhartid  00000000</span><br><span class="line"> mstatus  00000000</span><br><span class="line"> mip      00000000</span><br><span class="line"> mie      00000000</span><br><span class="line"> mideleg  00000000</span><br><span class="line"> medeleg  00000000</span><br><span class="line"> mtvec    204001dc</span><br><span class="line"> mepc     00000000</span><br><span class="line"> mcause   00000000</span><br><span class="line"> zero 00000000 ra 20401b6c sp 80000c30 gp 80000f90</span><br><span class="line"> tp 00000000 t0 20402ba0 t1 20402020 t2 80000878</span><br><span class="line"> s0 80000000 s1 20401d82 a0 80000874 a1 1000800c</span><br><span class="line"> a2 ffffffff a3 204022b8 a4 00010000 a5 10008000</span><br><span class="line"> a6 7fffffff a7 00000000 s2 20402b90 s3 00000000</span><br><span class="line"> s4 00000000 s5 00000000 s6 00000000 s7 00000000</span><br><span class="line"> s8 00000000 s9 00000000 s10 00000000 s11 00000000</span><br><span class="line"> t3 00000000 t4 00000000 t5 00000000 t6 00000000</span><br><span class="line"> ft0 0000000000000000 ft1 0000000000000000 ft2 0000000000000000 ft3 0000000000000000</span><br><span class="line"> ft4 0000000000000000 ft5 0000000000000000 ft6 0000000000000000 ft7 0000000000000000</span><br><span class="line"> fs0 0000000000000000 fs1 0000000000000000 fa0 0000000000000000 fa1 0000000000000000</span><br><span class="line"> fa2 0000000000000000 fa3 0000000000000000 fa4 0000000000000000 fa5 0000000000000000</span><br><span class="line"> fa6 0000000000000000 fa7 0000000000000000 fs2 0000000000000000 fs3 0000000000000000</span><br><span class="line"> fs4 0000000000000000 fs5 0000000000000000 fs6 0000000000000000 fs7 0000000000000000</span><br><span class="line"> fs8 0000000000000000 fs9 0000000000000000 fs10 0000000000000000 fs11 0000000000000000</span><br><span class="line"> ft8 0000000000000000 ft9 0000000000000000 ft10 0000000000000000 ft11 0000000000000000</span><br><span class="line">Abort trap: 6</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjxx8t8e9000dhez39znuvoey" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">RISC-V 量子拡張 (2. カスタム拡張を考える)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグ</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">タグクラウド</h3>
+    <div class="widget tagcloud">
+      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 12.5px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 15px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 10px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 17.5px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 20px;">riscv-q</a> <a href="/blog.kyamaz/tags/vscode/" style="font-size: 10px;">vscode</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">アーカイブ</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/06/">六月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最近の投稿</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/07/10/20190710-01-vscode/">RISC-V の開発環境</a>
+          </li>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える)</a>
+          </li>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
+          </li>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
+          </li>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 kyamaz<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog.kyamaz/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog.kyamaz/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog.kyamaz/fancybox/jquery.fancybox.css">
+  <script src="/blog.kyamaz/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog.kyamaz/js/script.js"></script>
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
