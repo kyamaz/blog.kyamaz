@@ -67,6 +67,100 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190604-02-how-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" class="article-date">
+  <time datetime="2019-06-04T13:00:00.000Z" itemprop="datePublished">2019-06-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h2><ul>
+<li>アクセス制限やビルド制限など <a href="https://help.github.com/en/articles/what-is-github-pages#usage-limits" target="_blank" rel="noopener">Usage limits</a> に注意. </li>
+<li>Jekyll がデフォルトなので, 最初の設定では Jekyll でサイトを構築する.<br>root directory に _config.yml, _layouts/default.html (ブランチ作成時とは別の手順で作成), LICENSE, README.md, .gitignore (Jekyll) は残しておく.  </li>
+</ul>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
+<li>master repo の下に _hexo フォルダを作成してインストールする. </li>
+<li>MathJax は, <code>npm install hexo-renderer-mathjax --save</code> でインストールする.  </li>
+</ul>
+<hr>
+<ul>
+<li>Hexo のインストール</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install -g hexo</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Github Pages と連携したインストール</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git clone https://github.com/&#123;users&#125;/&#123;users&#125;.git</span><br><span class="line"><span class="meta">$</span> cd &#123;users&#125;</span><br><span class="line"><span class="meta">$</span> git checkout -b hexo         # hexoブランチを作成</span><br><span class="line"><span class="meta">$</span> hexo init _hexo</span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> npm install</span><br><span class="line"><span class="meta">$</span> npm install hexo-deployer-git --save</span><br><span class="line"><span class="meta">$</span> npm install hexo-renderer-mathjax --save</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>_hexo/node_modules/hexo-renderer-mathjax/mathjax.html を編集する.  </p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-&lt;script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="addition">+&lt;script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m &apos;installed hexo&apos;</span><br><span class="line">$ git push origin hexo         # remote:hexo に push</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>_config.tml を編集</li>
+</ul>
+<ul>
+<li><p>サイト情報</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Site</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">How</span> <span class="string">do</span> <span class="string">you</span> <span class="string">like</span> <span class="string">Quantum</span> <span class="string">?</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">量子計算/量子情報の徒然なブログ</span></span><br><span class="line"><span class="attr">description:</span></span><br><span class="line"><span class="attr">keywords:</span> <span class="string">quantum</span> <span class="string">computing,</span> <span class="string">quantum</span> <span class="string">information</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">kyamaz</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">ja</span></span><br><span class="line"><span class="attr">timezone:</span> <span class="string">Japan</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>URLの変更</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://&#123;user&#125;.github.io/&#123;user&#125;</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/&#123;user&#125;/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:year/:month/:day/:title/</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>deployの設定</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="attr">https://github.com/&#123;user&#125;/&#123;user&#125;.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br><span class="line"><span class="attr">  message:</span> <span class="string">updated</span> <span class="string">by</span> <span class="string">hexo</span> <span class="string">deployer</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="新規記事の追加"><a href="#新規記事の追加" class="headerlink" title="新規記事の追加"></a>新規記事の追加</h3>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo new post 新規ページ</span><br></pre></td></tr></table></figure>
+
+<p>( YYYYMMDD_AA_any_strings.md として管理すると便利. ) </p>
+<h3 id="deploy-操作"><a href="#deploy-操作" class="headerlink" title="deploy 操作"></a>deploy 操作</h3><p><strong>master に直接 commit する. 更に, HEAD から master push される.</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout hexo</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo deploy -g</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> git add source</span><br><span class="line"><span class="meta">$</span> git commit -m 'updated _posts'</span><br><span class="line"><span class="meta">$</span> git push origin hexo</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjyctr1qa0001rxz3d9bxsuok" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190604-01-first-entry" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/" class="article-date">
@@ -95,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjy7h47wm0000c7z38rvp1dok" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjyctr1pv0000rxz3104jmjoo" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -157,6 +251,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/">RISC-V QEMU で動作するベアメタルプログラム</a>
           </li>
         
@@ -170,10 +268,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
           </li>
         
       </ul>

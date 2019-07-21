@@ -67,6 +67,237 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190721-01-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" class="article-date">
+  <time datetime="2019-07-21T14:52:27.000Z" itemprop="datePublished">2019-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>RISC-Vの 量子計算拡張を考えています.<br>量子計算の拡張セットでは, レジスタについては q0 から q32 （q0 は qzero を表す）としました.<br>量子命令セットは. </p>
+<p>custom0(opecode =  0xb) := 今は定義することを考えないで空けておきます. （今後の検討で必要になるかもしれません. ）<br>custom1(opecode = 0x2b) := 1量子ビット・ユニタリ演算<br>custom2(opecode = 0x5b) := 2量子ビット・ユニタリ演算<br>custom3(opecode = 0x7b) := 量子ビットの射影測定</p>
+<p>とおきます. そして, 1量子ビット・ユニタリ演算は custom1_rs1, 2量子ビット・ユニタリ演算は custom2_rs1_rs2, 量子ビット射影測定は custom3_rs1_rs2 (rs2は古典レジスタ）で表せると仮定します. ほかに「量子ビットの初期化」「レジスタ間の移動」が必要ですが, 古典命令セットを流用できそうです. </p>
+<p>というところまでは既に検討したところです.  </p>
+<p>なお, 量子拡張を表す識別文字を検討した際に, </p>
+<pre><code>量子を示すのに都合がよさそうなQuantumの頭文字「Q」は「４倍浮動小数点」として予約されていますので使えません. 
+そこで量子計算に欠かせない「ユニタリ」を表す「U」の記号を当てるのが良さそうです. 量子計算拡張は「U」として提案しましょう. </code></pre><p>としていたのですが, qemu のソースコードを確認したところ, 「U」は user-level として特権モードかどうかの識別文字として使われていることが分かりました. （ user-level 「U」に対して, supervisor-level の「S」です. ）<br>それを除くと使われていない識別文字は, G, K, O, R, W, X, Y, Z です. この中で量子っぽい文字を割付けたいのですが, 適当な文字があまりありません. 苦しまぎれに, 「K」はどうかと考えています. ロシア語圏などでは, “quantum” を “kvant” と記すようです. </p>
+<p>さて, 具体的な量子命令セットを定義していきましょう.  </p>
+<p>詳細を検討してみると拡張セットの定義領域は思いのほか広く, custom0 だけで全ての量子命令セットが表現できる可能性がでてきました.<br>そこで, 以前に検討した方針を全面的に見直します. また, 「量子ビットの初期化」「レジスタ間の移動」は量子命令セットを独自で定義します. </p>
+<p>再定義の量子命令セットは, フォーマット custom0_rs1_rs2 の R形式とするのが良いようです.  </p>
+<ul>
+<li>量子ビット間の移動</li>
+</ul>
+<p>量子レジスタ rs1 の shmat で指定された量子ビットの状態を, 量子レジスタ rs2 の shamt で指定された量子ビットに量子テレポーテーションします. </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">shamt</td>
+<td align="center">rs2</td>
+<td align="center">rs1</td>
+<td align="center">000</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<ul>
+<li>量子レジスタの初期化</li>
+</ul>
+<p>量子レジスタ rs2 の shmat で指定された量子ビットの状態を初期化します.  </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">shamt</td>
+<td align="center">rs2</td>
+<td align="center">rs1(=q0)</td>
+<td align="center">000</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<ul>
+<li>1量子ビット演算</li>
+</ul>
+<p>量子レジスタ rs1 に対して, shamt で指定したビット位置に, Unitray で示されたユニタリ行列を作用する命令です. </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">shamt</td>
+<td align="center">rs2(=q0)</td>
+<td align="center">rs1</td>
+<td align="center">Unitary</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">14 .. 12</th>
+<th align="center">Unitary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">110</td>
+<td align="center">T</td>
+</tr>
+<tr>
+<td align="center">111</td>
+<td align="center">H</td>
+</tr>
+</tbody></table>
+<ul>
+<li>2量子ビット演算</li>
+</ul>
+<p>量子レジスタ rs1 の shamt[control] で指定したビット位置を制御ビット, 量子レジスタ rs2 の shamt[target] で指定したビット位置を操作ビットとして 2量子ビットの Control Unitary を作用する命令です.  </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">shamt[control]</td>
+<td align="center">rs2</td>
+<td align="center">rs1</td>
+<td align="center">Unitary</td>
+<td align="center">shamt[target]</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">14 .. 12</th>
+<th align="center">Unitary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">011</td>
+<td align="center">CNOT</td>
+</tr>
+</tbody></table>
+<ul>
+<li>1量子ビットの測定</li>
+</ul>
+<p>量子レジスタ rs1 の shamt で指定された量子ビットの状態を測定して, 古典レジスタ rd の shamt ビット位置に値を保持します. </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">shamt</td>
+<td align="center">rs2(=q0)</td>
+<td align="center">rs1</td>
+<td align="center">000</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<ul>
+<li>複数量子ビットの測定</li>
+</ul>
+<p>量子レジスタ rs2 で指定された量子ビット（マスクで指定）に対して, 量子レジスタ rs1 の状態を測定して, 古典レジスタ rd のビット位置に値を保持します. </p>
+<table>
+<thead>
+<tr>
+<th align="center">31 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1000000</td>
+<td align="center">rs2( $\ne$ q0)</td>
+<td align="center">rs1</td>
+<td align="center">000</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" data-id="cjyctr1rz000drxz3ohojusgx" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190717-01-baremetral" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/" class="article-date">
@@ -115,7 +346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjy7h47z10013c7z3lkipmkmv" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjyctr1s8000hrxz3h0wkpnez" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -182,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjy7h47xr000qc7z3axe8wwuk" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjyctr1sa000jrxz3orwks5rm" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
@@ -227,7 +458,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjy7h47xu000rc7z3y3c8ltx9" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjyctr1s5000grxz3r967ovk3" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -270,7 +501,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjy7h47xw000tc7z322dml9xw" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjyctr1rt000crxz31y8smone" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -319,7 +550,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjy7h47y4000vc7z343co7add" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjyctr1rd0009rxz3x70v5or9" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -369,7 +600,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjy7h47x20005c7z3qhwtamo9" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjyctr1qu0005rxz3hfe6wwnz" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
@@ -413,7 +644,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjy7h47x00004c7z3wp0xhie8" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjyctr1r90008rxz3lsbaw6xz" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
@@ -471,7 +702,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjy7h47xa0008c7z3kkv5zu9p" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjyctr1qq0004rxz3jebzhcf8" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -531,101 +762,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjy7h47ws0001c7z3e888hspe" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-20190604-02-how-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" class="article-date">
-  <time datetime="2019-06-04T13:00:00.000Z" itemprop="datePublished">2019-06-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Github-Pages"><a href="#Github-Pages" class="headerlink" title="Github Pages"></a>Github Pages</h2><ul>
-<li>アクセス制限やビルド制限など <a href="https://help.github.com/en/articles/what-is-github-pages#usage-limits" target="_blank" rel="noopener">Usage limits</a> に注意. </li>
-<li>Jekyll がデフォルトなので, 最初の設定では Jekyll でサイトを構築する.<br>root directory に _config.yml, _layouts/default.html (ブランチ作成時とは別の手順で作成), LICENSE, README.md, .gitignore (Jekyll) は残しておく.  </li>
-</ul>
-<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><ul>
-<li>master repo の下に _hexo フォルダを作成してインストールする. </li>
-<li>MathJax は, <code>npm install hexo-renderer-mathjax --save</code> でインストールする.  </li>
-</ul>
-<hr>
-<ul>
-<li>Hexo のインストール</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install -g hexo</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Github Pages と連携したインストール</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git clone https://github.com/&#123;users&#125;/&#123;users&#125;.git</span><br><span class="line"><span class="meta">$</span> cd &#123;users&#125;</span><br><span class="line"><span class="meta">$</span> git checkout -b hexo         # hexoブランチを作成</span><br><span class="line"><span class="meta">$</span> hexo init _hexo</span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> npm install</span><br><span class="line"><span class="meta">$</span> npm install hexo-deployer-git --save</span><br><span class="line"><span class="meta">$</span> npm install hexo-renderer-mathjax --save</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>_hexo/node_modules/hexo-renderer-mathjax/mathjax.html を編集する.  </p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-&lt;script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="addition">+&lt;script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m &apos;installed hexo&apos;</span><br><span class="line">$ git push origin hexo         # remote:hexo に push</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>_config.tml を編集</li>
-</ul>
-<ul>
-<li><p>サイト情報</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Site</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">How</span> <span class="string">do</span> <span class="string">you</span> <span class="string">like</span> <span class="string">Quantum</span> <span class="string">?</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">量子計算/量子情報の徒然なブログ</span></span><br><span class="line"><span class="attr">description:</span></span><br><span class="line"><span class="attr">keywords:</span> <span class="string">quantum</span> <span class="string">computing,</span> <span class="string">quantum</span> <span class="string">information</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">kyamaz</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">ja</span></span><br><span class="line"><span class="attr">timezone:</span> <span class="string">Japan</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li><p>URLの変更</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://&#123;user&#125;.github.io/&#123;user&#125;</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/&#123;user&#125;/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:year/:month/:day/:title/</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li><p>deployの設定</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="attr">https://github.com/&#123;user&#125;/&#123;user&#125;.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br><span class="line"><span class="attr">  message:</span> <span class="string">updated</span> <span class="string">by</span> <span class="string">hexo</span> <span class="string">deployer</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="新規記事の追加"><a href="#新規記事の追加" class="headerlink" title="新規記事の追加"></a>新規記事の追加</h3>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo new post 新規ページ</span><br></pre></td></tr></table></figure>
-
-<p>( YYYYMMDD_AA_any_strings.md として管理すると便利. ) </p>
-<h3 id="deploy-操作"><a href="#deploy-操作" class="headerlink" title="deploy 操作"></a>deploy 操作</h3><p><strong>master に直接 commit する. 更に, HEAD から master push される.</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git checkout hexo</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> cd _hexo</span><br><span class="line"><span class="meta">$</span> hexo deploy -g</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> git add source</span><br><span class="line"><span class="meta">$</span> git commit -m 'updated _posts'</span><br><span class="line"><span class="meta">$</span> git push origin hexo</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjy7h47wy0003c7z3vru0klaf" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjyctr1ql0003rxz3vfrm9ot4" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -687,6 +824,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/">RISC-V QEMU で動作するベアメタルプログラム</a>
           </li>
         
@@ -700,10 +841,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
           </li>
         
       </ul>
