@@ -67,6 +67,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190724-01-spike" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/" class="article-date">
+  <time datetime="2019-07-24T14:23:44.000Z" itemprop="datePublished">2019-07-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/07/24/20190724-01-spike/">開発環境</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>で RISC-Vの32ビット対応のための riscv-gnu-toolchain の開発環境を整えましたが, 本エントリで扱う riscv-tools を開発に使います. この riscv-tools は toolchain に risv64 のコンパイル環境を前提としているため, 一度構築した 32bit 環境を変更します.<br>変更した riscv-gnu-toolchain のインスール手順を掲載します.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/riscv/riscv-gnu-toolchain.git</span><br><span class="line">$ cd riscv-gnu-toolchain</span><br><span class="line">$ mkdir build</span><br><span class="line">$ ../configure --prefix=/opt/riscv --enable-multilib</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
+
+<p>さて, RISC-V のエミュレーション環境は, すでに QEMU の環境を整えましたが, riscv-tool の中にある Spike もエミュレータとして動作します.<br>Spike は, QEMU よりも RISC-V の開発専用になっている分, 拡張実装の手順も簡便です. そこで, Spike を使って量子拡張実装を試して, QEMU に適応できるかを取り組んでいく手順で作業していきます.  </p>
+<p>Spike のビルド手順と, Proxy Kernel と呼ばれるベアメタルプログラムを動かす機構のビルド手順を掲載します.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/riscv/riscv-tools.git</span><br><span class="line">$ export RISCV=/opt/riscv</span><br><span class="line">$ cd riscv-tools</span><br><span class="line">$ cd riscv-spike</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --prefix=$&#123;RISCV&#125;</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br><span class="line"></span><br><span class="line">$ cd ../../riscv-pk</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --prefix=$&#123;RISCV&#125; --host=riscv32-unknown-elf</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
+
+<p>Spike を Proxy Kernel を介してベアメタルプログラムで動作させるには, 次のようにします.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ riscv32-unknown-elf-gcc hello.c -o hello -mabi=ilp32 -fPIC -nostdlib -nostartfiles</span><br><span class="line">$ spike --isa=rv32i /opt/riscv/riscv32-unknown-elf/bin/pk hello</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/24/20190724-01-spike/" data-id="cjyh85km7000gb5z3nbq2ffyq" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190721-01-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" class="article-date">
@@ -286,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" data-id="cjyctr1rz000drxz3ohojusgx" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" data-id="cjyh85kmw000kb5z3vk3mksrn" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -346,7 +394,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjyctr1s8000hrxz3h0wkpnez" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjyh85klu000db5z38qj7ue1v" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -413,7 +461,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjyctr1sa000jrxz3orwks5rm" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjyh85kn2000nb5z3z1obq9cu" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
@@ -458,7 +506,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjyctr1s5000grxz3r967ovk3" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjyh85kms000jb5z36mjafv5b" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -501,7 +549,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjyctr1rt000crxz31y8smone" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjyh85klb0008b5z35u829pfi" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -550,7 +598,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjyctr1rd0009rxz3x70v5or9" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjyh85klh0009b5z3t926flbv" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -600,7 +648,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjyctr1qu0005rxz3hfe6wwnz" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjyh85klp000cb5z3xpys72yp" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
@@ -644,7 +692,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjyctr1r90008rxz3lsbaw6xz" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjyh85kkt0004b5z3duo6x1wz" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
@@ -702,70 +750,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjyctr1qq0004rxz3jebzhcf8" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjyh85kkx0005b5z3m4paysm1" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-20190605-01-slidehtml" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" class="article-date">
-  <time datetime="2019-06-04T15:07:49.000Z" itemprop="datePublished">2019-06-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>生成されるスライド</li>
-</ul>
-<p><a href="/kyamaz/2019/06/05/20190605-01-slidehtml/slide.html">Slide</a></p>
-<h2 id="Hexo-に-generator-を追加"><a href="#Hexo-に-generator-を追加" class="headerlink" title="Hexo に generator を追加"></a>Hexo に generator を追加</h2><ul>
-<li>Install</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install hexo-generator-slidehtml --save</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="hexo-generator-slidehtml-の設定"><a href="#hexo-generator-slidehtml-の設定" class="headerlink" title="hexo-generator-slidehtml の設定"></a>hexo-generator-slidehtml の設定</h2><ul>
-<li>_config.yml の編集</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slidehtml:</span><br><span class="line">  titleMerge: true</span><br><span class="line">  horizontalSeparator: &apos;^\\n---\\n&apos;</span><br><span class="line">  verticalSeparator: &apos;^\\n--\\n&apos;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><ul>
-<li>記事のヘッダ</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: hoge</span><br><span class="line">slidehtml: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p><code>https://[yousite]/path/to/your/article/slide.html</code>が生成される. </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjyctr1ql0003rxz3vfrm9ot4" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
 
     </footer>
   </div>
@@ -824,6 +812,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/">開発環境</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
           </li>
         
@@ -837,10 +829,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える)</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
           </li>
         
       </ul>
