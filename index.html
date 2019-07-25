@@ -81,7 +81,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/07/24/20190724-01-spike/">開発環境</a>
+      <a class="article-title" href="/blog.kyamaz/2019/07/24/20190724-01-spike/">RISC-V エミュレータ Spike</a>
     </h1>
   
 
@@ -99,6 +99,7 @@
 <p>Spike を Proxy Kernel を介してベアメタルプログラムで動作させるには, 次のようにします.  </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ riscv32-unknown-elf-gcc hello.c -o hello -mabi=ilp32 -fPIC -nostdlib -nostartfiles</span><br><span class="line">$ spike --isa=rv32i /opt/riscv/riscv32-unknown-elf/bin/pk hello</span><br></pre></td></tr></table></figure>
 
+<p>（↑手元の環境でうまく動作していないため, 調査しています. ）</p>
 
       
     </div>
@@ -812,7 +813,7 @@
       <ul>
         
           <li>
-            <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/">開発環境</a>
+            <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/">RISC-V エミュレータ Spike</a>
           </li>
         
           <li>
