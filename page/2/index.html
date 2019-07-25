@@ -67,6 +67,66 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190605-01-slidehtml" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" class="article-date">
+  <time datetime="2019-06-04T15:07:49.000Z" itemprop="datePublished">2019-06-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>生成されるスライド</li>
+</ul>
+<p><a href="/kyamaz/2019/06/05/20190605-01-slidehtml/slide.html">Slide</a></p>
+<h2 id="Hexo-に-generator-を追加"><a href="#Hexo-に-generator-を追加" class="headerlink" title="Hexo に generator を追加"></a>Hexo に generator を追加</h2><ul>
+<li>Install</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> npm install hexo-generator-slidehtml --save</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="hexo-generator-slidehtml-の設定"><a href="#hexo-generator-slidehtml-の設定" class="headerlink" title="hexo-generator-slidehtml の設定"></a>hexo-generator-slidehtml の設定</h2><ul>
+<li>_config.yml の編集</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slidehtml:</span><br><span class="line">  titleMerge: true</span><br><span class="line">  horizontalSeparator: &apos;^\\n---\\n&apos;</span><br><span class="line">  verticalSeparator: &apos;^\\n--\\n&apos;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><ul>
+<li>記事のヘッダ</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: hoge</span><br><span class="line">slidehtml: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p><code>https://[yousite]/path/to/your/article/slide.html</code>が生成される. </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjyh85kkn0003b5z3crnto11i" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190604-02-how-to-hexo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" class="article-date">
@@ -149,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjyctr1qa0001rxz3d9bxsuok" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjyh85kka0001b5z390ail44j" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -189,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjyctr1pv0000rxz3104jmjoo" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjyh85kjk0000b5z3lyne51ze" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -251,6 +311,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/">開発環境</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
           </li>
         
@@ -264,10 +328,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える)</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
           </li>
         
       </ul>
