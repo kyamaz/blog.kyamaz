@@ -5,20 +5,20 @@
   
 
   
-  <title>はじめてみようかと... | How do you like Quantum ?</title>
+  <title>RISC-V エミュレータ Spike と拡張命令の実装方針 | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
-<meta name="keywords" content="misc">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   前回 RISC-V エミュレータ Spikeの最後に, Spike を Proxy Kernel を介してベアメタルプログラムで動作させるかを試しましたが, う">
+<meta name="keywords" content="riscv-q,quantum computing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="はじめてみようかと...">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/index.html">
+<meta property="og:title" content="RISC-V エミュレータ Spike と拡張命令の実装方針">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/08/01/20190731-01-spike/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   前回 RISC-V エミュレータ Spikeの最後に, Spike を Proxy Kernel を介してベアメタルプログラムで動作させるかを試しましたが, う">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-07-03T17:50:36.799Z">
+<meta property="og:updated_time" content="2019-07-31T21:57:48.687Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="はじめてみようかと...">
-<meta name="twitter:description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
+<meta name="twitter:title" content="RISC-V エミュレータ Spike と拡張命令の実装方針">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   前回 RISC-V エミュレータ Spikeの最後に, Spike を Proxy Kernel を介してベアメタルプログラムで動作させるかを試しましたが, う">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190604-01-first-entry" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190731-01-spike" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/" class="article-date">
-  <time datetime="2019-06-04T10:00:00.000Z" itemprop="datePublished">2019-06-04</time>
+    <a href="/blog.kyamaz/2019/08/01/20190731-01-spike/" class="article-date">
+  <time datetime="2019-07-31T17:59:59.000Z" itemprop="datePublished">2019-08-01</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      はじめてみようかと...
+      RISC-V エミュレータ Spike と拡張命令の実装方針
     </h1>
   
 
@@ -91,16 +91,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Github Pages + <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> でブログを立ち上げてみました.</p>
-<p>数式の例<br>$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $</p>
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>前回 <a href="2019/07/24/20190724-01-spike">RISC-V エミュレータ Spike</a>の最後に, Spike を Proxy Kernel を介してベアメタルプログラムで動作させるかを試しましたが, うまく行きませんでした. もう少し詳しく調査して最終的には riscv32 のコンパイラで作成したベアメタルプログラムを動作させてみたいですが, ここでは, RISCV 量子拡張版の エミュレータを動かすことを先に進めたいです.    </p>
+<p>まずは, <code>riscv-gnu-toolchain</code> は既に riscv64 版を準備しましたので, riscv-tools の下にある <code>riscv-isa-sim</code>, <code>riscv-pk</code> の riscv64 版をビルドします.<br>ビルドは, <code>export RISCV=/opt/riscv</code> 等で環境変数 RISCV を指定して, cmake / make / make install をします.<br>次に, riscv64 版のベアメタルプログラムを動作させましょう.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">    printf(&quot;Hello RISCV!\n&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>を準備して, 次のようにビルド / 実行します.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ riscv64-unknown-elf-gcc hello.c -o hello</span><br><span class="line">$ spike pk hello</span><br><span class="line"></span><br><span class="line">bbl loader</span><br><span class="line">Hello RISCV!</span><br></pre></td></tr></table></figure>
+
+<p>riscv64 版であれば, さほど苦もなく動作するようです. </p>
+<p>さて, それでは Spike エミュレータに 拡張命令を組み込んでみましょう.<br>拡張命令セットの追加は, riscv-tools の submodule である <code>riscv-opcodes</code> を修正して, <code>riscv-isa-sim</code> に反映させます.  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cd riscv-tools</span><br><span class="line">$ cd risc-opcodes</span><br><span class="line">(opcodes ファイルを適当に修正)</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+
+<p>命令セットの追加は, riscv-isa-sim の riscv/insns に実際の命令セットの動作を記述して追加し, spike をビルド/インストールします. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cd ../riscv-isa-sim</span><br><span class="line">$ cd build</span><br><span class="line">$ make</span><br><span class="line">$ make install</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjyrskcjk000cfkz3phqorxzc" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/01/20190731-01-spike/" data-id="cjyrskcjv000ofkz3u5zktcz0" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
 
     </footer>
   </div>
@@ -108,15 +121,11 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          Github Pages + Hexo の設定
-        
-      </div>
-    </a>
   
+    <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">RISC-V エミュレータ Spike</div>
+    </a>
   
 </nav>
 
