@@ -67,6 +67,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190612-01-qir" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" class="article-date">
+  <time datetime="2019-06-12T14:43:21.000Z" itemprop="datePublished">2019-06-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
+<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
+<h2 id="LLVM-IR-の拡張"><a href="#LLVM-IR-の拡張" class="headerlink" title="LLVM IR の拡張"></a>LLVM IR の拡張</h2><p>ここでは, LLVM Frontend, Backend で量子拡張することを考えています.<br>このためには, IR を拡張することを考える必要がありそうです.  </p>
+<p>arXiv:1604.01401 では, QIR を構成するべきという提案はありますが, 具体的な提案はされていません.<br>ScaffCC は, 今後実装を調べていきますが, 現状確認したところでは, IR を拡張する方針ではなく, Pass を拡張して対応しているようです.<br>具体的な QIR の仕様で, 公けになっている提案はみつけられていません. </p>
+<p>IR の Instraction は, <code>llvm/include/llvm/IR/Instruction.def</code> に定義されています.<br>ここに, “1-qubit operator”, “2-qubit operator”, “measurement operator” の３つを追加すれば良いと考えられます.  </p>
+<p>具体的には, 未だどのような操作 (量子ゲート) を追加していけばよいかがはっきりしませんが, 一先ず</p>
+<ul>
+<li>1-qubit operator は, 任意角回転のユニタリ</li>
+<li>2-qubit operator は,  CNOT</li>
+<li>measurement operator は, Z軸基底の測定</li>
+</ul>
+<p>として検討を進めていくことにます. </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjzbytckj0008bpz3qjfvm7ke" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190605-03-qlang" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/06/05/20190605-03-qlang/" class="article-date">
@@ -99,7 +149,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjz1j5ruy000cstz3awnh2nsy" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-03-qlang/" data-id="cjzbytckb0003bpz3vlazcacy" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
@@ -157,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjz1j5rum0005stz3lus7olol" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" data-id="cjzbytcks000bbpz36wn4pb0y" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -217,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjz1j5ruk0004stz3jscc9pwn" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" data-id="cjzbytckf0005bpz34kg8meji" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -311,7 +361,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjz1j5rur0008stz3fv1gr677" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" data-id="cjzbytcke0004bpz34peeatkv" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -351,7 +401,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjz1j5rup0007stz3kqxyfqfk" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjzbytck60001bpz34xpdjdwg" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
@@ -413,6 +463,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/">RISC-V 量子拡張の実装</a>
           </li>
         
@@ -426,10 +480,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/">RISC-V QEMU で動作するベアメタルプログラム</a>
           </li>
         
       </ul>

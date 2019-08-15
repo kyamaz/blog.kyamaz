@@ -5,20 +5,20 @@
   
 
   
-  <title>RISC-V エミュレータ Spike | How do you like Quantum ?</title>
+  <title>制約付き量子ビット（Constraint Qubit） | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="RISC-V toolchain（開発環境を整える）で RISC-Vの32ビット対応のための riscv-gnu-toolchain の開発環境を整えましたが, 本エントリで扱う riscv-tools を開発に使います. この riscv-tools は toolchain に risv64 のコンパイル環境を前提としているため, 一度構築した 32bit 環境を変更します.変更した riscv">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.一方で, 量">
 <meta name="keywords" content="quantum computing,riscv-q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RISC-V エミュレータ Spike">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/07/24/20190724-01-spike/index.html">
+<meta property="og:title" content="制約付き量子ビット（Constraint Qubit）">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="RISC-V toolchain（開発環境を整える）で RISC-Vの32ビット対応のための riscv-gnu-toolchain の開発環境を整えましたが, 本エントリで扱う riscv-tools を開発に使います. この riscv-tools は toolchain に risv64 のコンパイル環境を前提としているため, 一度構築した 32bit 環境を変更します.変更した riscv">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.一方で, 量">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-08-09T17:56:50.012Z">
+<meta property="og:updated_time" content="2019-08-15T00:48:00.769Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RISC-V エミュレータ Spike">
-<meta name="twitter:description" content="RISC-V toolchain（開発環境を整える）で RISC-Vの32ビット対応のための riscv-gnu-toolchain の開発環境を整えましたが, 本エントリで扱う riscv-tools を開発に使います. この riscv-tools は toolchain に risv64 のコンパイル環境を前提としているため, 一度構築した 32bit 環境を変更します.変更した riscv">
+<meta name="twitter:title" content="制約付き量子ビット（Constraint Qubit）">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.一方で, 量">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190724-01-spike" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190814-01-constraint-qubits" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/" class="article-date">
-  <time datetime="2019-07-24T14:23:44.000Z" itemprop="datePublished">2019-07-24</time>
+    <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/" class="article-date">
+  <time datetime="2019-08-14T14:41:30.000Z" itemprop="datePublished">2019-08-14</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      RISC-V エミュレータ Spike
+      制約付き量子ビット（Constraint Qubit）
     </h1>
   
 
@@ -91,22 +91,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>で RISC-Vの32ビット対応のための riscv-gnu-toolchain の開発環境を整えましたが, 本エントリで扱う riscv-tools を開発に使います. この riscv-tools は toolchain に risv64 のコンパイル環境を前提としているため, 一度構築した 32bit 環境を変更します.<br>変更した riscv-gnu-toolchain のインスール手順を掲載します.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/riscv/riscv-gnu-toolchain.git</span><br><span class="line">$ cd riscv-gnu-toolchain</span><br><span class="line">$ mkdir build</span><br><span class="line">$ ../configure --prefix=/opt/riscv --enable-multilib</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
-
-<p>さて, RISC-V のエミュレーション環境は, すでに QEMU の環境を整えましたが, riscv-tool の中にある Spike もエミュレータとして動作します.<br>Spike は, QEMU よりも RISC-V の開発専用になっている分, 拡張実装の手順も簡便です. そこで, Spike を使って量子拡張実装を試して, QEMU に適応できるかを取り組んでいく手順で作業していきます.  </p>
-<p>Spike のビルド手順と, Proxy Kernel と呼ばれるベアメタルプログラムを動かす機構のビルド手順を掲載します.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/riscv/riscv-tools.git</span><br><span class="line">$ export RISCV=/opt/riscv</span><br><span class="line">$ cd riscv-tools</span><br><span class="line">$ cd riscv-spike</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --prefix=$&#123;RISCV&#125;</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br><span class="line"></span><br><span class="line">$ cd ../../riscv-pk</span><br><span class="line">$ mkdir build</span><br><span class="line">$ cd build</span><br><span class="line">$ ../configure --prefix=$&#123;RISCV&#125; --host=riscv32-unknown-elf</span><br><span class="line">$ make</span><br><span class="line">$ sudo make install</span><br></pre></td></tr></table></figure>
-
-<p>Spike を Proxy Kernel を介してベアメタルプログラムで動作させるには, 次のようにします.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ riscv32-unknown-elf-gcc hello.c -o hello -mabi=ilp32 -fPIC -nostdlib -nostartfiles</span><br><span class="line">$ spike --isa=rv32i /opt/riscv/riscv32-unknown-elf/bin/pk hello</span><br></pre></td></tr></table></figure>
-
-<p>（↑手元の環境でうまく動作していないため, 調査しています. ）</p>
-
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.<br>一方で, 量子誤り訂正の理論ではエンコードした複数の量子ビットに対しては, 任意のユニタリ操作を施すというより, 限定的なユニタリ操作しか行えません.<br>扱えるユニタリ操作は, 誤り訂正の種類によっても様々ですが, 量子誤り訂正を施した後の量子ビットは, 操作できる操作も制限があります.<br>ユニバーサリティを保つには H, T, CNOT ができる量子ビットが必要で, 最低限でも H, T, CNOT はできるようにすれば, 任意ユニタリ操作ができる一般的な<br>量子ビットと近似的に同様の計算が行えます. </p>
+<p>さてここで, もう少し制約を付与した量子ビットを考えます. 例えば, ユニバーサリティが保てていない制約のある量子ビットを多く配置して,<br>ユニバーサリティが保てている量子ビットを少しだけ配置した構造で, 量子計算を目指すような構造を検討してみたいと思います.  </p>
+<p>T ゲート（非クリフォード操作）ができないクリフォード操作しか行えない量子ビットを考えます. 量子ビットの性能は満たさないため, これを「制約付き量子ビット（Constraint Qubit）」と呼びます.  </p>
+<p>※制約付き量子ビット（Constraint Qubit）の呼称は, ここで提案する呼び方で一般的な用語ではありません.  </p>
+<p>この制約付き量子ビットとクリフォード操作を組み合わせて一つの量子レジスタを構成します.<br>ここで検討している構成は次のような制約付き量子ビットを 7個と, 非クリフォードを含んだ結合のための量子ビット 1個の構成です.  </p>
+<p>●結合量子ビット（Connection-Qubit）  </p>
+<pre><code>* 初期化: |0&gt;のみ  
+* １量子ビットゲート操作: アダマール演算(H), π/8ゲート(T)のみ可能
+* ２量子ビットゲート操作: 隣接する３つの量子ビットとの CNOT （CNOTの方向は制御側１つ、被制御側が２つ）  
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映  </code></pre><p>●制限付き量子ビット（Constraint-Qubit）  </p>
+<pre><code>* 初期化: |0&gt;のみ  
+* １量子ビットゲート操作:    X, Z, H, Sゲートのみ可能  
+* ２量子ビットゲート操作: 隣接する２つの量子ビットとの CNOT（CNOTの方向は制御側１つ、被制御側が１つ）  
+                        （終端の量子ビットは, 隣接の１つの量子ビットと被制御側として CNOT を行える）
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/24/20190724-01-spike/" data-id="cjzbytcl1000ibpz361x6cuxc" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/" data-id="cjzbytclc000pbpz3i8o5kx9i" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -117,19 +121,10 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/08/01/20190731-01-spike/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          RISC-V エミュレータ Spike と拡張命令の実装方針
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</div>
+      <div class="article-nav-title">RISC-V 量子拡張の実装</div>
     </a>
   
 </nav>
