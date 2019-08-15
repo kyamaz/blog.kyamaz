@@ -67,6 +67,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190814-01-constraint-qubits" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/" class="article-date">
+  <time datetime="2019-08-14T14:41:30.000Z" itemprop="datePublished">2019-08-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.<br>一方で, 量子誤り訂正の理論ではエンコードした複数の量子ビットに対しては, 任意のユニタリ操作を施すというより, 限定的なユニタリ操作しか行えません.<br>扱えるユニタリ操作は, 誤り訂正の種類によっても様々ですが, 量子誤り訂正を施した後の量子ビットは, 操作できる操作も制限があります.<br>ユニバーサリティを保つには H, T, CNOT ができる量子ビットが必要で, 最低限でも H, T, CNOT はできるようにすれば, 任意ユニタリ操作ができる一般的な<br>量子ビットと近似的に同様の計算が行えます. </p>
+<p>さてここで, もう少し制約を付与した量子ビットを考えます. 例えば, ユニバーサリティが保てていない制約のある量子ビットを多く配置して,<br>ユニバーサリティが保てている量子ビットを少しだけ配置した構造で, 量子計算を目指すような構造を検討してみたいと思います.  </p>
+<p>T ゲート（非クリフォード操作）ができないクリフォード操作しか行えない量子ビットを考えます. 量子ビットの性能は満たさないため, これを「制約付き量子ビット（Constraint Qubit）」と呼びます.  </p>
+<p>※制約付き量子ビット（Constraint Qubit）の呼称は, ここで提案する呼び方で一般的な用語ではありません.  </p>
+<p>この制約付き量子ビットとクリフォード操作を組み合わせて一つの量子レジスタを構成します.<br>ここで検討している構成は次のような制約付き量子ビットを 7個と, 非クリフォードを含んだ結合のための量子ビット 1個の構成です.  </p>
+<p>●結合量子ビット（Connection-Qubit）  </p>
+<pre><code>* 初期化: |0&gt;のみ  
+* １量子ビットゲート操作: アダマール演算(H), π/8ゲート(T)のみ可能
+* ２量子ビットゲート操作: 隣接する３つの量子ビットとの CNOT （CNOTの方向は制御側１つ、被制御側が２つ）  
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映  </code></pre><p>●制限付き量子ビット（Constraint-Qubit）  </p>
+<pre><code>* 初期化: |0&gt;のみ  
+* １量子ビットゲート操作:    X, Z, H, Sゲートのみ可能  
+* ２量子ビットゲート操作: 隣接する２つの量子ビットとの CNOT（CNOTの方向は制御側１つ、被制御側が１つ）  
+                        （終端の量子ビットは, 隣接の１つの量子ビットと被制御側として CNOT を行える）
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/" data-id="cjzbytclc000pbpz3i8o5kx9i" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190807-01-opcodes" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/" class="article-date">
@@ -312,7 +365,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/07/20190807-01-opcodes/" data-id="cjz1j5rvl000ustz393zs5fr0" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/07/20190807-01-opcodes/" data-id="cjzbytcle000sbpz3mrbtc952" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -365,7 +418,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/01/20190731-01-spike/" data-id="cjz1j5rv8000hstz3k63i7ww8" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/01/20190731-01-spike/" data-id="cjzbytcl3000jbpz3509vvzui" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -414,7 +467,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/24/20190724-01-spike/" data-id="cjz1j5rve000kstz3do9jf4l2" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/24/20190724-01-spike/" data-id="cjzbytcl1000ibpz361x6cuxc" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -645,7 +698,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" data-id="cjz1j5rvm000wstz3f2s0ca20" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/21/20190721-01-riscv-q/" data-id="cjzbytcla000nbpz37ve5md5g" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -705,7 +758,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjz1j5rvi000pstz3qx8gfmxp" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjzbytcl5000kbpz394ki33m1" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -772,7 +825,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjz1j5rvg000mstz3sq4j01jv" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjzbytcky000gbpz34xp315n1" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
@@ -817,7 +870,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjz1j5rvj000rstz3fbzmih78" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjzbytckw000fbpz3bt02ku2q" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -860,7 +913,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjz1j5ruv0009stz3pr392xc6" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/26/20190626-01-toolchain/" data-id="cjzbytckq0009bpz3bc40v33o" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -909,60 +962,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjz1j5rv7000gstz3214d4ez2" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/19/20190619-01-qemu/" data-id="cjzbytcku000dbpz31gktruck" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-20190612-01-qir" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" class="article-date">
-  <time datetime="2019-06-12T14:43:21.000Z" itemprop="datePublished">2019-06-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
-<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
-<h2 id="LLVM-IR-の拡張"><a href="#LLVM-IR-の拡張" class="headerlink" title="LLVM IR の拡張"></a>LLVM IR の拡張</h2><p>ここでは, LLVM Frontend, Backend で量子拡張することを考えています.<br>このためには, IR を拡張することを考える必要がありそうです.  </p>
-<p>arXiv:1604.01401 では, QIR を構成するべきという提案はありますが, 具体的な提案はされていません.<br>ScaffCC は, 今後実装を調べていきますが, 現状確認したところでは, IR を拡張する方針ではなく, Pass を拡張して対応しているようです.<br>具体的な QIR の仕様で, 公けになっている提案はみつけられていません. </p>
-<p>IR の Instraction は, <code>llvm/include/llvm/IR/Instruction.def</code> に定義されています.<br>ここに, “1-qubit operator”, “2-qubit operator”, “measurement operator” の３つを追加すれば良いと考えられます.  </p>
-<p>具体的には, 未だどのような操作 (量子ゲート) を追加していけばよいかがはっきりしませんが, 一先ず</p>
-<ul>
-<li>1-qubit operator は, 任意角回転のユニタリ</li>
-<li>2-qubit operator は,  CNOT</li>
-<li>measurement operator は, Z軸基底の測定</li>
-</ul>
-<p>として検討を進めていくことにます. </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/12/20190612-01-qir/" data-id="cjz1j5ruz000estz3cujv8xmc" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
 
     </footer>
   </div>
@@ -1021,6 +1024,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/">RISC-V 量子拡張の実装</a>
           </li>
         
@@ -1034,10 +1041,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/">RISC-V QEMU で動作するベアメタルプログラム</a>
           </li>
         
       </ul>
