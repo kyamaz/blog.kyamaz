@@ -5,20 +5,20 @@
   
 
   
-  <title>RISC-V 量子拡張の実装 | How do you like Quantum ?</title>
+  <title>RISC-V 量子拡張の仕様検討 | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   さて, そろそろ RISC-V 量子拡張の実装を進めて参りましょう.計画時では, RISC-V 量子拡張の実装は, ユニバーサルゲートである H ゲート, T">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V 量子拡張  で検討した内容から, 次の点を改善しました.1量子ビット演算で全量子ビットに Hゲートをかける場合は, ユースケースとしては多く発生す">
 <meta name="keywords" content="quantum computing,riscv-q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RISC-V 量子拡張の実装">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/08/07/20190807-01-opcodes/index.html">
+<meta property="og:title" content="RISC-V 量子拡張の仕様検討">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/08/21/20190821-01-opcodes/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   さて, そろそろ RISC-V 量子拡張の実装を進めて参りましょう.計画時では, RISC-V 量子拡張の実装は, ユニバーサルゲートである H ゲート, T">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V 量子拡張  で検討した内容から, 次の点を改善しました.1量子ビット演算で全量子ビットに Hゲートをかける場合は, ユースケースとしては多く発生す">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-08-15T00:53:47.181Z">
+<meta property="og:updated_time" content="2019-08-21T11:49:30.841Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RISC-V 量子拡張の実装">
-<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   さて, そろそろ RISC-V 量子拡張の実装を進めて参りましょう.計画時では, RISC-V 量子拡張の実装は, ユニバーサルゲートである H ゲート, T">
+<meta name="twitter:title" content="RISC-V 量子拡張の仕様検討">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   RISC-V 量子拡張  で検討した内容から, 次の点を改善しました.1量子ビット演算で全量子ビットに Hゲートをかける場合は, ユースケースとしては多く発生す">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190807-01-opcodes" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190821-01-opcodes" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/" class="article-date">
-  <time datetime="2019-08-07T14:57:27.000Z" itemprop="datePublished">2019-08-07</time>
+    <a href="/blog.kyamaz/2019/08/21/20190821-01-opcodes/" class="article-date">
+  <time datetime="2019-08-21T12:21:27.000Z" itemprop="datePublished">2019-08-21</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      RISC-V 量子拡張の実装
+      RISC-V 量子拡張の仕様検討
     </h1>
   
 
@@ -92,14 +92,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
-<p>さて, そろそろ RISC-V 量子拡張の実装を進めて参りましょう.<br>計画時では, RISC-V 量子拡張の実装は, ユニバーサルゲートである H ゲート, T ゲート, CNOT ゲートのみを準備するだけにしようとしていましたが,<br>QPU シミュレータの中を試行錯誤的に色々と検討したいという事由もあり, 次の通りの構成としました.  </p>
-<p>なお, <a href="20190721-01-riscv-q.md">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a> で検討していた内容から, さらに検討が進み, 変更した事項があります. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">qmeas.k   rd rs1 rs2 qimm6 31=1 14..12=0 6..2=0x02 1..0=3  # quantum measurement</span><br><span class="line">qtelep.k  rd rs1 rs2 qimm6 31=0 14..12=0 6..2=0x02 1..0=3  # quantum teleportation</span><br><span class="line">qtocx.k   rd rs1 rs2 qimm6 31=1 14..12=4 6..2=0x02 1..0=3  # quantum two-qubit operator CX-gate</span><br><span class="line">qootdg.k  rd rs1 rs2 qimm6 31=0 14..12=1 6..2=0x02 1..0=3  # quantum one-qubit operator T^&#123;\dag&#125;-gate</span><br><span class="line">qoosdg.k  rd rs1 rs2 qimm6 31=0 14..12=2 6..2=0x02 1..0=3  # quantum one-qubit operator S^&#123;\dag&#125;-gate</span><br><span class="line">qooz.k    rd rs1 rs2 qimm6 31=0 14..12=3 6..2=0x02 1..0=3  # quantum one-qubit operator Z-gate</span><br><span class="line">qoox.k    rd rs1 rs2 qimm6 31=0 14..12=4 6..2=0x02 1..0=3  # quantum one-qubit operator X-gate</span><br><span class="line">qoos.k    rd rs1 rs2 qimm6 31=0 14..12=5 6..2=0x02 1..0=3  # quantum one-qubit operator S-gate</span><br><span class="line">qoot.k    rd rs1 rs2 qimm6 31=0 14..12=6 6..2=0x02 1..0=3  # quantum one-qubit operator T-gate</span><br><span class="line">qooh.k    rd rs1 rs2 qimm6 31=0 14..12=7 6..2=0x02 1..0=3  # quantum one-qubit operator H-gate</span><br></pre></td></tr></table></figure>
+<p><a href="20190807-01-opcodes.md">RISC-V 量子拡張 </a> で検討した内容から, 次の点を改善しました.<br>1量子ビット演算で全量子ビットに Hゲートをかける場合は, ユースケースとしては多く発生するのですが, １量子ビット演算は<br>1命令セットで1量子ビットずつの指定しかできないため, 呼び出し数が多くなることが容易に想定されます.<br>そこでマスク指定した量子ビットに対して同じユニタリ操作ができるように変更しました.  </p>
+<h3 id="量子レジスタ"><a href="#量子レジスタ" class="headerlink" title="量子レジスタ"></a>量子レジスタ</h3><p>量子計算の拡張セットでは, レジスタについては q0 から q32 （q0 は qzero を表す）とします. </p>
+<h3 id="拡張版：量子命令セット"><a href="#拡張版：量子命令セット" class="headerlink" title="拡張版：量子命令セット"></a>拡張版：量子命令セット</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">qmeas.k   rd rs1 rs2 qimm6 31=1 14..12=0 6..2=0x02 1..0=3  # quantum measurement</span><br><span class="line">qtelep.k  rd rs1 rs2 qimm6 31=0 14..12=0 6..2=0x02 1..0=3  # quantum teleportation</span><br><span class="line">qtocx.k   rd rs1 rs2 qimm6 31=1 14..12=4 6..2=0x02 1..0=3  # quantum two-qubit operator CX-gate</span><br><span class="line">qootdg.k  rd rs1 rs2 qimm6 31=0 14..12=1 6..2=0x02 1..0=3  # quantum one-qubit operator T^&#123;\dag&#125;-gate</span><br><span class="line">qoosdg.k  rd rs1 rs2 qimm6 31=0 14..12=2 6..2=0x02 1..0=3  # quantum one-qubit operator S^&#123;\dag&#125;-gate</span><br><span class="line">qooz.k    rd rs1 rs2 qimm6 31=0 14..12=3 6..2=0x02 1..0=3  # quantum one-qubit operator Z-gate</span><br><span class="line">qoox.k    rd rs1 rs2 qimm6 31=0 14..12=4 6..2=0x02 1..0=3  # quantum one-qubit operator X-gate</span><br><span class="line">qoos.k    rd rs1 rs2 qimm6 31=0 14..12=5 6..2=0x02 1..0=3  # quantum one-qubit operator S-gate</span><br><span class="line">qoot.k    rd rs1 rs2 qimm6 31=0 14..12=6 6..2=0x02 1..0=3  # quantum one-qubit operator T-gate</span><br><span class="line">qooh.k    rd rs1 rs2 qimm6 31=0 14..12=7 6..2=0x02 1..0=3  # quantum one-qubit operator H-gate</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>量子ビット間の移動（qtelep.k）</li>
 </ul>
-<p>量子レジスタ rs1 の rd で指定された位置の量子ビットの状態を, 量子レジスタ rs2 の qimm6 で指定された位置の量子ビットに量子テレポーテーションします.<br>qimm6(30) = 1 のときは, rd や qimm6(25-29) に関わらず, rs1 の全量子ビットの状態を rs2 に量子テレポーテーションします.  </p>
+<p>量子レジスタ rs1 の rd で指定された位置の量子ビットの状態を, 量子レジスタ rs2 の qimm6 で指定された位置の量子ビットに量子テレポーテーションします.<br>qimm6(30) = 1 のときは, rd や qimm6(25-29) に関わらず, rs1 の全量子ビットの状態を rs2 に量子テレポーテーションします.</p>
 <table>
 <thead>
 <tr>
@@ -123,9 +123,9 @@
 </tr>
 </tbody></table>
 <ul>
-<li>量子レジスタの初期化（qtelep.k の特殊な命令）</li>
+<li>量子レジスタの1量子ビットの初期化</li>
 </ul>
-<p>量子レジスタ rs2 の qimm6 で指定された位置の量子ビットの状態を初期化します.<br>qimm6(30) = 1 のときは, qimm6(25-29) に関わらず, rs2 の全量子ビットの状態を初期化します.  </p>
+<p>量子レジスタ rs2 の qimm6 で指定された位置の量子ビットの状態を初期化します.<br>qimm6(30) = 1 のときは, qimm6(25-29) に関わらず, rs2 の全量子ビットの状態を初期化します.</p>
 <table>
 <thead>
 <tr>
@@ -151,7 +151,7 @@
 <ul>
 <li>1量子ビット演算</li>
 </ul>
-<p>量子レジスタ rs1 に対して, qimm6 で指定したビット位置に, Unitray で示されたユニタリ行列を作用する命令です. </p>
+<p>量子レジスタ rs1 に対して, qimm6 で指定したビット位置に, Unitray で示されたユニタリ行列を作用する命令です.</p>
 <table>
 <thead>
 <tr>
@@ -219,9 +219,36 @@
 </tr>
 </tbody></table>
 <ul>
+<li>複数量子ビットに対する同一1量子ビット演算（古典レジスタrs2にマスク情報が保持されている前提）</li>
+</ul>
+<p>古典レジスタ rs2 の値で指定された量子ビット（マスクで指定）に対して, 量子レジスタ rs1 に, Unitary で示されたユニタリ行列を作用する命令です. </p>
+<table>
+<thead>
+<tr>
+<th align="center">31</th>
+<th align="center">30 .. 25</th>
+<th align="center">24 .. 20</th>
+<th align="center">19 .. 15</th>
+<th align="center">14 .. 12</th>
+<th align="center">11 .. 7</th>
+<th align="center">6 .. 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">qimm6(=000000)</td>
+<td align="center">rs2( $\ne$ q0)</td>
+<td align="center">rs1</td>
+<td align="center">Unitary</td>
+<td align="center">rd</td>
+<td align="center">0001011</td>
+</tr>
+</tbody></table>
+<p>※ Unitary は「1量子ビット演算」と同じです. </p>
+<ul>
 <li>2量子ビット演算</li>
 </ul>
-<p>量子レジスタ rs2 の qimm6[control] で指定したビット位置を制御ビット, 量子レジスタ rs1 の rd[target] で指定したビット位置を操作ビットとして 2量子ビットの Control Unitary を作用する命令です.  </p>
+<p>量子レジスタ rs2 の qimm6[control] で指定したビット位置を制御ビット, 量子レジスタ rs1 の rd[target] で指定したビット位置を操作ビットとして 2量子ビットの Control Unitary を作用する命令です.<br>qimm6(30) = 1 のときは, qimm6(25-29) に関わらず, rs2 の全量子ビットを制御ビットとして, rs1 の rs2 と同じ位置の量子ビットを操作ビットとして 2量子ビットの Control Unitary を作用します.</p>
 <table>
 <thead>
 <tr>
@@ -261,7 +288,7 @@
 <ul>
 <li>1量子ビットの測定（qmeas.k）</li>
 </ul>
-<p>量子レジスタ rs1 の qimm6 で指定された位置の量子ビットの状態を測定して, 古典レジスタ rd の qimm6 ビット位置に値を保持します. </p>
+<p>量子レジスタ rs1 の qimm6 で指定された位置の量子ビットの状態を測定して, 古典レジスタ rd の qimm6 ビット位置に値を保持します.</p>
 <table>
 <thead>
 <tr>
@@ -285,9 +312,9 @@
 </tr>
 </tbody></table>
 <ul>
-<li>複数量子ビットの測定（qmeas.kの特殊な命令）</li>
+<li>複数量子ビットの測定（古典レジスタrs2にマスク情報が保持されている前提）</li>
 </ul>
-<p>古典レジスタ rs2 の値で指定された量子ビット（マスクで指定）に対して, 量子レジスタ rs1 の状態を測定して, 古典レジスタ rd のビット位置に値を保持します. </p>
+<p>古典レジスタ rs2 の値で指定された量子ビット（マスクで指定）に対して, 量子レジスタ rs1 の状態を測定して, 古典レジスタ rd のビット位置に値を保持します.</p>
 <table>
 <thead>
 <tr>
@@ -314,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/07/20190807-01-opcodes/" data-id="cjzbytcle000sbpz3mrbtc952" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/21/20190821-01-opcodes/" data-id="cjzl701c90000tsz3g0a0n46t" class="article-share-link">共有</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
@@ -325,19 +352,10 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          制約付き量子ビット（Constraint Qubit）
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog.kyamaz/2019/08/01/20190731-01-spike/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/blog.kyamaz/2019/08/21/20190821-02-repo-bare-mirror/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">前の記事</strong>
-      <div class="article-nav-title">RISC-V エミュレータ Spike と拡張命令の実装方針</div>
+      <div class="article-nav-title">Github の private repository への bare &amp; mirror</div>
     </a>
   
 </nav>
