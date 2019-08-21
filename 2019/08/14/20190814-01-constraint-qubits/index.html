@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="How do you like Quantum ?">
 <meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.一方で, 量">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-08-15T00:48:00.769Z">
+<meta property="og:updated_time" content="2019-08-21T11:40:25.435Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="制約付き量子ビット（Constraint Qubit）">
 <meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子レジスタを考えるときに, 量子ビットを並べるわけですが, 現在開発されている多くの量子ビットは任意のユニタリ操作が動作するように作られています.一方で, 量">
@@ -101,12 +101,13 @@
 <pre><code>* 初期化: |0&gt;のみ  
 * １量子ビットゲート操作: アダマール演算(H), π/8ゲート(T)のみ可能
 * ２量子ビットゲート操作: 隣接する３つの量子ビットとの CNOT （CNOTの方向は制御側１つ、被制御側が２つ）  
-* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映  </code></pre><p>●制限付き量子ビット（Constraint-Qubit）  </p>
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映  </code></pre><p>●制約付き量子ビット（Constraint-Qubit）  </p>
 <pre><code>* 初期化: |0&gt;のみ  
 * １量子ビットゲート操作:    X, Z, H, Sゲートのみ可能  
 * ２量子ビットゲート操作: 隣接する２つの量子ビットとの CNOT（CNOTの方向は制御側１つ、被制御側が１つ）  
                         （終端の量子ビットは, 隣接の１つの量子ビットと被制御側として CNOT を行える）
-* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映</code></pre>
+* 測定: Z基底の測定、測定結果を古典レジスタ(測定レジスタ)のビットに反映</code></pre><p>（※本稿で記載した構成の量子レジスタは, 実装面とかけ離れすぎているという理由もあり, ボツ案となりました. [2019/08/21追記] ）</p>
+
       
     </div>
     <footer class="article-footer">
@@ -120,6 +121,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/blog.kyamaz/2019/08/21/20190821-02-repo-bare-mirror/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">次の記事</strong>
+      <div class="article-nav-title">
+        
+          Github の private repository への bare &amp; mirror
+        
+      </div>
+    </a>
   
   
     <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/" id="article-nav-older" class="article-nav-link-wrap">
@@ -175,6 +185,14 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/08/21/20190821-01-opcodes/">RISC-V 量子拡張の仕様検討</a>
+          </li>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/08/21/20190821-02-repo-bare-mirror/">Github の private repository への bare &amp; mirror</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
           </li>
         
@@ -184,14 +202,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/08/01/20190731-01-spike/">RISC-V エミュレータ Spike と拡張命令の実装方針</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/07/24/20190724-01-spike/">RISC-V エミュレータ Spike</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/07/21/20190721-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える[続き])</a>
           </li>
         
       </ul>
