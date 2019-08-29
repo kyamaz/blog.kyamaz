@@ -67,6 +67,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190828-01-quest" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/" class="article-date">
+  <time datetime="2019-08-28T14:21:27.000Z" itemprop="datePublished">2019-08-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/08/28/20190828-01-quest/">量子計算ライブラリ QuEST</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>量子計算拡張を行ううえで, 量子計算ライブラリを自作するか, あるものを使うことになります.<br>ここでは, MIT Licence である <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">QuEST</a> を採用してRISC-Vシミュレータ（Spike）に組み込むこととします.  </p>
+<p>QuESTを利用できるようにするための, 導入は簡単です. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/quest-kit/QuEST.git</span><br><span class="line">cd QuEST</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>このときにビルドされる <code>libQuEST</code> を RISC-V のシミュレータから利用することにします.<br>作成されるデモを試してみることもできます.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./demo</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/28/20190828-01-quest/" data-id="cjzvdma0y00009ez3tiyydz7n" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190821-01-opcodes" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/08/21/20190821-01-opcodes/" class="article-date">
@@ -1163,51 +1209,6 @@
 
 
   
-    <article id="post-20190703-01-riscv-q" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" class="article-date">
-  <time datetime="2019-07-03T16:48:08.000Z" itemprop="datePublished">2019-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/07/04/20190703-01-riscv-q/">RISC-V 量子拡張 (2. カスタム拡張を考える)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
-<p>RISC-Vの 量子計算拡張を考えています.<br>RISC-Vには custom0 〜 custom3 までの 4つの拡張命令が予め定義されています.<br>opcode では, custom0 = 0xb, custom1 = 0x2b, custom2 = 0x5b, custom3 = 0x7b が割り当てられています.<br>量子拡張では, 「１量子ビットのユニタリ演算」「２量子ビットのユニタリ演算」「量子ビットの射影測定」「量子ビットの初期化」「レジスタ間の移動」を追加することを考慮したいです.  </p>
-<p>拡張命令の検討の前に, レジスタについて考える必要があります. 通常のRV32Iの仕様では 32bit レジスタの個数は32個の x0 から x31 と定義してあり,<br>それぞれの番号のなかには特殊な役割をもっているレジスタもあります. 例えば, x0 は zero を表すレジスタと決まっている等.<br>そこで, 同じく量子レジスタも q0 から q32 の32個ある仕様として進めます. また, q0 は qzero を表すレジスタとし, ほかにも今後必要に応じて, 量子レジスタの役割も決めていきます.<br>当面, 量子レジスタは, 命令が呼ばれる前後で量子状態が保持される “保存レジスタ” としておきます. </p>
-<p>さてここで, 拡張命令セットに戻ると, 「量子ビットの初期化」「レジスタ間の移動」は古典命令セットを流用できそうです. （別で検討します. ）<br>つまり, 「１量子ビットのユニタリ演算」「２量子ビットのユニタリ演算」「量子ビットの射影測定」を拡張命令セットの opcode に割り当てることを想定します.  </p>
-<p>custom1 := 1量子ビット・ユニタリ演算<br>custom2 := 2量子ビット・ユニタリ演算<br>custom3 := 量子ビットの射影測定</p>
-<p>とおきます. （custom0 は今後の検討で必要になるかもしれません. 今は定義することを考えないで空けておきます. ）<br>この custom1/2/3 の opecode の定義は, toolchain の <code>riscv-binutils/include/opcode/riscv-opc.h</code> にあります.<br>なお, 同一の情報が <code>riscv-gdb/include/opcode/riscv-opc.h</code>, <code>riscv-qemu/include/disas/riscv-opc.h</code> にもあります. 修正するときには留意しましょう.<br>この riscv-opc.h には, custom1/2/3 の引数のタイプに応じて, custom<code>X</code>_rs1, custom<code>X</code>_rs1_rs2, custom<code>X</code>_rd, custom<code>X</code>_rd_rs1, custom<code>X</code>_rd_rs1_rs2 が利用可能となっています.  </p>
-<p>詳細の検討は更に重ねる必要がありますが, 1量子ビット・ユニタリ演算は custom1_rs1, 2量子ビット・ユニタリ演算は custom2_rs1_rs2, 量子ビット射影測定は custom3_rs1_rs2 (rs2は古典レジスタ）で表せると仮定します. </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/04/20190703-01-riscv-q/" data-id="cjzbytckw000fbpz3bt02ku2q" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1258,6 +1259,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/">量子計算ライブラリ QuEST</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/08/21/20190821-01-opcodes/">RISC-V 量子拡張の仕様検討</a>
           </li>
         
@@ -1271,10 +1276,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/">RISC-V 量子拡張の実装</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/08/01/20190731-01-spike/">RISC-V エミュレータ Spike と拡張命令の実装方針</a>
           </li>
         
       </ul>

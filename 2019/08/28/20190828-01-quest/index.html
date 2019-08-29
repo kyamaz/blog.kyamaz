@@ -5,20 +5,20 @@
   
 
   
-  <title>はじめてみようかと... | How do you like Quantum ?</title>
+  <title>量子計算ライブラリ QuEST | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
-<meta name="keywords" content="misc">
+  <meta name="description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子計算拡張を行ううえで, 量子計算ライブラリを自作するか, あるものを使うことになります.ここでは, MIT Licence である QuEST を採用してR">
+<meta name="keywords" content="quantum computing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="はじめてみようかと...">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/index.html">
+<meta property="og:title" content="量子計算ライブラリ QuEST">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/08/28/20190828-01-quest/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
-<meta property="og:description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
+<meta property="og:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子計算拡張を行ううえで, 量子計算ライブラリを自作するか, あるものを使うことになります.ここでは, MIT Licence である QuEST を採用してR">
 <meta property="og:locale" content="ja">
-<meta property="og:updated_time" content="2019-07-03T17:50:36.799Z">
+<meta property="og:updated_time" content="2019-08-29T07:17:00.092Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="はじめてみようかと...">
-<meta name="twitter:description" content="Github Pages + Hexo でブログを立ち上げてみました. 数式の例$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $">
+<meta name="twitter:title" content="量子計算ライブラリ QuEST">
+<meta name="twitter:description" content="RISC-V量子拡張は, 「RiscV.RV32IU」として @k_yamaz 蛙 が提案しています.（詳しくは, 技術ブログ Qiita に投稿した RISC-Vの量子計算拡張 をご参照ください. ）思いつきなどをメモしていきます.   量子計算拡張を行ううえで, 量子計算ライブラリを自作するか, あるものを使うことになります.ここでは, MIT Licence である QuEST を採用してR">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-20190604-01-first-entry" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-20190828-01-quest" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/" class="article-date">
-  <time datetime="2019-06-04T10:00:00.000Z" itemprop="datePublished">2019-06-04</time>
+    <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/" class="article-date">
+  <time datetime="2019-08-28T14:21:27.000Z" itemprop="datePublished">2019-08-28</time>
 </a>
     
   </div>
@@ -83,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      はじめてみようかと...
+      量子計算ライブラリ QuEST
     </h1>
   
 
@@ -91,16 +91,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Github Pages + <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> でブログを立ち上げてみました.</p>
-<p>数式の例<br>$ i \hbar \frac { \partial } { \partial t } \phi = H \phi $</p>
+        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
+<p>量子計算拡張を行ううえで, 量子計算ライブラリを自作するか, あるものを使うことになります.<br>ここでは, MIT Licence である <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">QuEST</a> を採用してRISC-Vシミュレータ（Spike）に組み込むこととします.  </p>
+<p>QuESTを利用できるようにするための, 導入は簡単です. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/quest-kit/QuEST.git</span><br><span class="line">cd QuEST</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>このときにビルドされる <code>libQuEST</code> を RISC-V のシミュレータから利用することにします.<br>作成されるデモを試してみることもできます.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./demo</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/06/04/20190604-01-first-entry/" data-id="cjzbytck60001bpz34xpdjdwg" class="article-share-link">共有</a>
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/08/28/20190828-01-quest/" data-id="cjzvdma0y00009ez3tiyydz7n" class="article-share-link">共有</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/misc/">misc</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
 
     </footer>
   </div>
@@ -108,15 +114,11 @@
     
 <nav id="article-nav">
   
-    <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">次の記事</strong>
-      <div class="article-nav-title">
-        
-          Github Pages + Hexo の設定
-        
-      </div>
-    </a>
   
+    <a href="/blog.kyamaz/2019/08/21/20190821-01-opcodes/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">RISC-V 量子拡張の仕様検討</div>
+    </a>
   
 </nav>
 
