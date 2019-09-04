@@ -67,6 +67,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190904-01-qlang" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/09/04/20190904-01-qlang/" class="article-date">
+  <time datetime="2019-09-04T14:19:40.000Z" itemprop="datePublished">2019-09-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/09/04/20190904-01-qlang/">LLVM Frontend 量子拡張 (Qlang を考える)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
+<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
+<h2 id="LLVM-Frontend-の拡張"><a href="#LLVM-Frontend-の拡張" class="headerlink" title="LLVM Frontend の拡張"></a>LLVM Frontend の拡張</h2><p><a href="20190605-03-qlang.md">LLVM Frontend 量子拡張 (1. Qlang を考える)</a> のエントリで検討しましたが,<br>状況が少しずつ変化してきました.  </p>
+<p>以前は, <code>#pragma</code> を定義してプログラムを書くことを想定してC言語の拡張を考えておりました.<br>このフロントエンドの開発では, 次の2つのアプローチを検討しました. </p>
+<p>1) gcc に手を加えて, <code>#pragma</code> を使った実装を行う.<br>2) LLVM に手を入れて, primitive な型を拡張する.  </p>
+<p>gcc は構造化が見づらい一方で, LLVM は DSL が作りやすい構造があります.<br> LLVM を試していく予定です.  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/09/04/20190904-01-qlang/" data-id="ck05lyb2l0000epz3jkcewbj3" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190828-01-quest" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/" class="article-date">
@@ -1142,73 +1186,6 @@
 
 
   
-    <article id="post-20190710-01-vscode" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/07/10/20190710-01-vscode/" class="article-date">
-  <time datetime="2019-07-10T14:28:31.000Z" itemprop="datePublished">2019-07-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/07/10/20190710-01-vscode/">RISC-V の開発環境</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
-<p>RISC-V の開発環境を整えています. Visual Studio Code で開発環境を整えます.  </p>
-<ul>
-<li><p>VSCode を起動</p>
-</li>
-<li><p>“PlatformIO IDE” の Extension をインストール（Extensionsタブをクリックして, 検索欄から “PlatformIO” を検索）<br>※インストール時の出力 Window を閉じてしまわないように注意. </p>
-</li>
-<li><p>コマンドパレット(Ctrl + Shift + P or 左下の設定アイコン =&gt; Command Palette)を開き, “PlatformIO”と検索 </p>
-</li>
-<li><p>“PlatformIO : Home”を選択し, 起動</p>
-</li>
-<li><p>New Projectを選択し, Name, Board, Framework を入力</p>
-<ul>
-<li>Name : プロジェクトの名前 （”risc-q”と入力）</li>
-<li>Board : ボードの種類. （”HiFive1(SiFive)”を選択）</li>
-<li>Framework : Boardに合わせた選択肢. （”Freedom E SDK”を選択）</li>
-</ul>
-</li>
-</ul>
-<p>しばらく待つと利用可能になります. </p>
-<p>簡単なテストコードとして, 次の src/test.c を作成します. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char **argv) &#123;</span><br><span class="line">    printf(&quot;Hello RISCV\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>コマンドパレット（ビルドは “PlatformIO : Build”）, または下部の青いバーにあるアイコンで, ビルドを行います.<br><code>.pioenvs/hifive1/firmware.elf</code> に ELF 形式のファイルが作られます. コマンドプロンプトから, 次のようなコマンドで<br>firmware.elf を読み込むと実行できるはずでした.  （がうまくいきません. 動かない理由を調査して次回以降に報告します. ）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-riscv32 -nographic -machine sifive_e -kernel firmware.elf</span><br></pre></td></tr></table></figure>
-
-<p>（出力される画面）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">qemu: hardware error: sifive_prci_read: read: addr=0xc</span><br><span class="line"></span><br><span class="line">CPU #0:</span><br><span class="line"> pc       20401d82</span><br><span class="line"> mhartid  00000000</span><br><span class="line"> mstatus  00000000</span><br><span class="line"> mip      00000000</span><br><span class="line"> mie      00000000</span><br><span class="line"> mideleg  00000000</span><br><span class="line"> medeleg  00000000</span><br><span class="line"> mtvec    204001dc</span><br><span class="line"> mepc     00000000</span><br><span class="line"> mcause   00000000</span><br><span class="line"> zero 00000000 ra 20401b6c sp 80000c30 gp 80000f90</span><br><span class="line"> tp 00000000 t0 20402ba0 t1 20402020 t2 80000878</span><br><span class="line"> s0 80000000 s1 20401d82 a0 80000874 a1 1000800c</span><br><span class="line"> a2 ffffffff a3 204022b8 a4 00010000 a5 10008000</span><br><span class="line"> a6 7fffffff a7 00000000 s2 20402b90 s3 00000000</span><br><span class="line"> s4 00000000 s5 00000000 s6 00000000 s7 00000000</span><br><span class="line"> s8 00000000 s9 00000000 s10 00000000 s11 00000000</span><br><span class="line"> t3 00000000 t4 00000000 t5 00000000 t6 00000000</span><br><span class="line"> ft0 0000000000000000 ft1 0000000000000000 ft2 0000000000000000 ft3 0000000000000000</span><br><span class="line"> ft4 0000000000000000 ft5 0000000000000000 ft6 0000000000000000 ft7 0000000000000000</span><br><span class="line"> fs0 0000000000000000 fs1 0000000000000000 fa0 0000000000000000 fa1 0000000000000000</span><br><span class="line"> fa2 0000000000000000 fa3 0000000000000000 fa4 0000000000000000 fa5 0000000000000000</span><br><span class="line"> fa6 0000000000000000 fa7 0000000000000000 fs2 0000000000000000 fs3 0000000000000000</span><br><span class="line"> fs4 0000000000000000 fs5 0000000000000000 fs6 0000000000000000 fs7 0000000000000000</span><br><span class="line"> fs8 0000000000000000 fs9 0000000000000000 fs10 0000000000000000 fs11 0000000000000000</span><br><span class="line"> ft8 0000000000000000 ft9 0000000000000000 ft10 0000000000000000 ft11 0000000000000000</span><br><span class="line">Abort trap: 6</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/10/20190710-01-vscode/" data-id="cjzbytcky000gbpz34xp315n1" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/vscode/">vscode</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1237,7 +1214,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 12.5px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 15px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 10px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 17.5px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 20px;">riscv-q</a> <a href="/blog.kyamaz/tags/vscode/" style="font-size: 10px;">vscode</a>
+      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 15px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 17.5px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 12.5px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 20px;">riscv-q</a> <a href="/blog.kyamaz/tags/vscode/" style="font-size: 10px;">vscode</a>
     </div>
   </div>
 
@@ -1246,7 +1223,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">アーカイブ</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/06/">六月 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/blog.kyamaz/archives/2019/06/">六月 2019</a></li></ul>
     </div>
   </div>
 
@@ -1257,6 +1234,10 @@
     <h3 class="widget-title">最近の投稿</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/blog.kyamaz/2019/09/04/20190904-01-qlang/">LLVM Frontend 量子拡張 (Qlang を考える)</a>
+          </li>
         
           <li>
             <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/">量子計算ライブラリ QuEST</a>
@@ -1272,10 +1253,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/08/07/20190807-01-opcodes/">RISC-V 量子拡張の実装</a>
           </li>
         
       </ul>
