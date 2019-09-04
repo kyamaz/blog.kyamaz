@@ -5,16 +5,20 @@
   
 
   
-  <title>アーカイブ: 2019/6 | How do you like Quantum ?</title>
+  <title>LLVM Frontend 量子拡張 (Qlang を考える) | How do you like Quantum ?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="quantum computing, quantum information">
-<meta property="og:type" content="website">
-<meta property="og:title" content="How do you like Quantum ?">
-<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/archives/2019/06/index.html">
+  <meta name="description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
+<meta name="keywords" content="llvm-q,qlang,quantum computing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM Frontend 量子拡張 (Qlang を考える)">
+<meta property="og:url" content="http://kyamaz.github.io/blog.kyamaz/2019/09/04/20190904-01-qlang/index.html">
 <meta property="og:site_name" content="How do you like Quantum ?">
+<meta property="og:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
 <meta property="og:locale" content="ja">
+<meta property="og:updated_time" content="2019-09-04T18:38:26.672Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How do you like Quantum ?">
+<meta name="twitter:title" content="LLVM Frontend 量子拡張 (Qlang を考える)">
+<meta name="twitter:description" content="@k_yamaz 蛙 は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するためのOSSコミュニティ「OpenQL Project」を運営しております.量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています.  “A Software Method">
   
     <link rel="alternate" href="/blog.kyamaz/atom.xml" title="How do you like Quantum ?" type="application/atom+xml">
   
@@ -65,173 +69,59 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog.kyamaz/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/" class="archive-article-date">
-  <time datetime="2019-06-26T13:00:00.000Z" itemprop="datePublished">6月 26</time>
+        <section id="main"><article id="post-20190904-01-qlang" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/09/04/20190904-01-qlang/" class="article-date">
+  <time datetime="2019-09-04T14:19:40.000Z" itemprop="datePublished">2019-09-04</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/26/20190626-01-toolchain/">RISC-V toolchain（開発環境を整える）</a>
+    <h1 class="article-title" itemprop="name">
+      LLVM Frontend 量子拡張 (Qlang を考える)
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/19/20190619-01-qemu/" class="archive-article-date">
-  <time datetime="2019-06-19T13:00:00.000Z" itemprop="datePublished">6月 19</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/19/20190619-01-qemu/">QEMU の RISC-V（1. RISC-V量子拡張の対応方針）</a>
-    </h1>
-  
+        <p><a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> は, 量子コンピュータのための量子プログラミング言語や, 量子コンパイラを開発するための<br>OSSコミュニティ「<a href="http://openql.org" target="_blank" rel="noopener">OpenQL Project</a>」を運営しております.<br>量子プログラミング言語, 量子コンパイラを開発するための調査, 検討を書いています.<br>OpenQL は, OpenMP や OpenCL の仕様を参考にして, 仕様を検討しています. </p>
+<p>“A Software Methodology for Compiling Quantum Programs <a href="https://arxiv.org/abs/1604.01401" target="_blank" rel="noopener">arXiv:1604.01401</a> “ による提案や<br><a href="https://qutech.nl/" target="_blank" rel="noopener">QuTech</a>の<a href="https://quest.qtechtheory.org/" target="_blank" rel="noopener">QuEST</a> <a href="https://github.com/QuEST-Kit/QuEST" target="_blank" rel="noopener">*</a> , <a href="https://www.epiqc.cs.uchicago.edu/about" target="_blank" rel="noopener">EPiQC</a>によるLLVM ベースで量子拡張を目指した実装 <a href="https://github.com/epiqc/ScaffCC" target="_blank" rel="noopener">ScaffCC</a> など,<br>世界の研究機関でも同様の研究がされております.  </p>
+<h2 id="LLVM-Frontend-の拡張"><a href="#LLVM-Frontend-の拡張" class="headerlink" title="LLVM Frontend の拡張"></a>LLVM Frontend の拡張</h2><p><a href="20190605-03-qlang.md">LLVM Frontend 量子拡張 (1. Qlang を考える)</a> のエントリで検討しましたが,<br>状況が少しずつ変化してきました.  </p>
+<p>以前は, <code>#pragma</code> を定義してプログラムを書くことを想定してC言語の拡張を考えておりました.<br>このフロントエンドの開発では, 次の2つのアプローチを検討しました. </p>
+<p>1) gcc に手を加えて, <code>#pragma</code> を使った実装を行う.<br>2) LLVM に手を入れて, primitive な型を拡張する.  </p>
+<p>gcc は構造化が見づらい一方で, LLVM は DSL が作りやすい構造があります.<br> LLVM を試していく予定です.  </p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/12/20190612-01-qir/" class="archive-article-date">
-  <time datetime="2019-06-12T14:43:21.000Z" itemprop="datePublished">6月 12</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/12/20190612-01-qir/">LLVM IR 量子拡張 (1. QIR を考える)</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/05/20190605-03-qlang/" class="archive-article-date">
-  <time datetime="2019-06-05T14:19:40.000Z" itemprop="datePublished">6月 5</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/09/04/20190904-01-qlang/" data-id="ck05lyb2l0000epz3jkcewbj3" class="article-share-link">共有</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/05/20190605-03-qlang/">LLVM Frontend 量子拡張 (1. Qlang を考える)</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/05/20190605-02-riscv-q/" class="archive-article-date">
-  <time datetime="2019-06-04T16:35:42.000Z" itemprop="datePublished">6月 5</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/05/20190605-02-riscv-q/">RISC-V 量子拡張 (1. 定義を考える)</a>
-    </h1>
-  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/llvm-q/">llvm-q</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/qlang/">qlang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
 
-    </header>
+    </footer>
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/" class="archive-article-date">
-  <time datetime="2019-06-04T15:07:49.000Z" itemprop="datePublished">6月 5</time>
-</a>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/05/20190605-01-slidehtml/">スライドコンテンツの自動生成 (slidehtml)</a>
-    </h1>
   
+    <a href="/blog.kyamaz/2019/08/28/20190828-01-quest/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前の記事</strong>
+      <div class="article-nav-title">量子計算ライブラリ QuEST</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/" class="archive-article-date">
-  <time datetime="2019-06-04T13:00:00.000Z" itemprop="datePublished">6月 4</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/04/20190604-02-how-to-hexo/">Github Pages + Hexo の設定</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/" class="archive-article-date">
-  <time datetime="2019-06-04T10:00:00.000Z" itemprop="datePublished">6月 4</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog.kyamaz/2019/06/04/20190604-01-first-entry/">はじめてみようかと...</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
 
 </section>
         
