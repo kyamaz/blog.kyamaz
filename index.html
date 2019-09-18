@@ -67,6 +67,46 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-20190918-01-development" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog.kyamaz/2019/09/18/20190918-01-development/" class="article-date">
+  <time datetime="2019-09-18T13:19:40.000Z" itemprop="datePublished">2019-09-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog.kyamaz/2019/09/18/20190918-01-development/">実装を進めています</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先週(2019/09/11)はブログの更新をお休みしました. すみません. </p>
+<p>しばらくは, gcc の改造やこれまでに検討して参りましたシミュレータの改造を進めております.<br>コンポーネントごとに改造が進んだタイミングで, ソースコードを含めた改造箇所を解説する予定です.  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/09/18/20190918-01-development/" data-id="ck0pawy0h0000buz3jftyno6p" class="article-share-link">共有</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/quantum-computing/">quantum computing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-20190904-01-qlang" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/blog.kyamaz/2019/09/04/20190904-01-qlang/" class="article-date">
@@ -1126,71 +1166,11 @@
 
 
   
-    <article id="post-20190717-01-baremetral" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/" class="article-date">
-  <time datetime="2019-07-17T16:28:48.000Z" itemprop="datePublished">2019-07-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog.kyamaz/2019/07/18/20190717-01-baremetral/">RISC-V QEMU で動作するベアメタルプログラム</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>RISC-V量子拡張は, 「RiscV.RV32IU」として <a href="https://twitter.com/k_yamaz" target="_blank" rel="noopener">@k_yamaz 蛙</a> が提案しています.<br>（詳しくは, 技術ブログ Qiita に投稿した <a href="https://qiita.com/kyamaz/items/a0e468d78547ee466318" target="_blank" rel="noopener">RISC-Vの量子計算拡張</a> をご参照ください. ）<br>思いつきなどをメモしていきます.  </p>
-<p>VSCode でビルドしたプログラムの動作がうまく行かないままですので, 自作でベアメタルプログラムのサンプルを作成します.  </p>
-<p>簡単なテストコードとして, 次の main.c を作成します. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#define UART0DR (volatile unsigned char *) 0x10000000</span><br><span class="line">#define PRINT_UART0(x) print_uart(UART0DR, x)</span><br><span class="line"></span><br><span class="line">void print_uart(volatile unsigned char* base_addr, const char *s) &#123;</span><br><span class="line">  while(*s != &apos;\0&apos;) &#123;</span><br><span class="line">    *UART0DR = (unsigned char)(*s);</span><br><span class="line">    s++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  const char* msg = &quot;Hello world!\n&quot;;</span><br><span class="line">  PRINT_UART0(msg);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>ライブラリが使えないので, UART0 のアドレスにメッセージ ( msg )のキャラクタコードを書き込むプログラムです.  </p>
-<p>つぎに, 簡易的なブートローダー startup.S を作成します.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.align 6</span><br><span class="line"></span><br><span class="line">.equ UART_BASE, 0x10000000</span><br><span class="line">.equ REG_RBR, 0</span><br><span class="line">.equ REG_TBR, 0</span><br><span class="line">.equ REG_IIR, 2</span><br><span class="line">.equ IIR_TX_RDY, 2</span><br><span class="line">.equ IIR_RX_RDY, 4</span><br><span class="line"></span><br><span class="line">.section .text</span><br><span class="line">.globl _start</span><br><span class="line">.globl stack_top</span><br><span class="line"></span><br><span class="line">_start:</span><br><span class="line">  la sp, stack_top</span><br><span class="line">  call main</span><br><span class="line"></span><br><span class="line">loop_here: j loop_here</span><br></pre></td></tr></table></figure>
-
-<p>次のリンカーに渡すセクション等を定義したスクリプト ( link.ld ) を使って, この２つのプログラムをコンパイルします.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">OUTPUT_ARCH( &quot;riscv&quot; )</span><br><span class="line">ENTRY( _start )</span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line">  /* text: test code section */</span><br><span class="line">  . = 0x80000000;</span><br><span class="line">  .text : &#123; *(.text) &#125;</span><br><span class="line">  /* data: Initialized data segment */</span><br><span class="line">  .data : &#123; *(.data) &#125;</span><br><span class="line">  .rodata : &#123; *(.rodata) &#125;</span><br><span class="line">  .sdata : &#123; *(.sdata) &#125;</span><br><span class="line">  .debug : &#123; *(.debug) &#125;</span><br><span class="line">  . += 0x8000;</span><br><span class="line">  stack_top = .;</span><br><span class="line"></span><br><span class="line">  /* End of uninitalized data segement */</span><br><span class="line">  _end = .;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>（コンパイルの実行）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">riscv32-unknown-elf-gcc -T link.ld startup.S main.c -o hello -mabi=ilp32 -fPIC -nostdlib -nostartfiles</span><br></pre></td></tr></table></figure>
-
-<p>（QEMUでベアメタルプログラムとして実行）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-riscv32 -nographic -machine virt -kernel hello</span><br></pre></td></tr></table></figure>
-
-<p>（出力される画面）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello world!</span><br></pre></td></tr></table></figure>
-
-<p><code>Ctrl-A x</code> で QEMU は終了します.  </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://kyamaz.github.io/blog.kyamaz/2019/07/18/20190717-01-baremetral/" data-id="cjzbytcl5000kbpz394ki33m1" class="article-share-link">共有</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog.kyamaz/tags/riscv-q/">riscv-q</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/blog.kyamaz/page/2/">2</a><a class="extend next" rel="next" href="/blog.kyamaz/page/2/">次へ &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/blog.kyamaz/page/2/">2</a><a class="page-number" href="/blog.kyamaz/page/3/">3</a><a class="extend next" rel="next" href="/blog.kyamaz/page/2/">次へ &raquo;</a>
   </nav>
 
 </section>
@@ -1214,7 +1194,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">タグクラウド</h3>
     <div class="widget tagcloud">
-      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 15px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 17.5px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 12.5px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 20px;">riscv-q</a> <a href="/blog.kyamaz/tags/vscode/" style="font-size: 10px;">vscode</a>
+      <a href="/blog.kyamaz/tags/llvm-q/" style="font-size: 14px;">llvm-q</a> <a href="/blog.kyamaz/tags/misc/" style="font-size: 16px;">misc</a> <a href="/blog.kyamaz/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog.kyamaz/tags/qlang/" style="font-size: 12px;">qlang</a> <a href="/blog.kyamaz/tags/quantum-computing/" style="font-size: 20px;">quantum computing</a> <a href="/blog.kyamaz/tags/riscv-q/" style="font-size: 18px;">riscv-q</a> <a href="/blog.kyamaz/tags/vscode/" style="font-size: 10px;">vscode</a>
     </div>
   </div>
 
@@ -1236,6 +1216,10 @@
       <ul>
         
           <li>
+            <a href="/blog.kyamaz/2019/09/18/20190918-01-development/">実装を進めています</a>
+          </li>
+        
+          <li>
             <a href="/blog.kyamaz/2019/09/04/20190904-01-qlang/">LLVM Frontend 量子拡張 (Qlang を考える)</a>
           </li>
         
@@ -1249,10 +1233,6 @@
         
           <li>
             <a href="/blog.kyamaz/2019/08/21/20190821-02-repo-bare-mirror/">Github の private repository への bare &amp; mirror</a>
-          </li>
-        
-          <li>
-            <a href="/blog.kyamaz/2019/08/14/20190814-01-constraint-qubits/">制約付き量子ビット（Constraint Qubit）</a>
           </li>
         
       </ul>
